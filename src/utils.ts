@@ -1,11 +1,11 @@
 
 // Import Node.js Dependencies
-import { IncomingHttpHeaders } from "node:http";
+import { type IncomingHttpHeaders } from "node:http";
 
 // Import Internal Dependencies
-import { RequestOptions, RequestResponse } from "./request";
-import { HttpieError } from "./class/HttpieCommonError";
-import { HttpieOnHttpError } from "./class/HttpieOnHttpError";
+import { type RequestOptions, type RequestResponse } from "./request.js";
+import { HttpieError } from "./class/HttpieCommonError.js";
+import { HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
 
 // CONSTANTS
 const kDefaultUserAgent = "httpie";

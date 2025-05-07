@@ -2,7 +2,7 @@
 import timers from "node:timers/promises";
 
 // Import Internal Dependencies
-import { RetryOptions } from "../retry";
+import { type RetryOptions } from "../retry.js";
 
 // CONSTANTS
 const kDefaultOperationOptions: Partial<RetryOptions> = {

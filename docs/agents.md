@@ -3,7 +3,7 @@
 Agents are custom constructs that are used to describe internal and external services.
 
 ```js
-import { agents } from "@myunisoft/httpie";
+import { agents } from "@openally/httpie";
 
 console.log(agents); // <- push a new agent in this Array
 ```

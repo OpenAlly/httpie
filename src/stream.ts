@@ -5,9 +5,13 @@ import { Duplex } from "node:stream";
 import * as undici from "undici";
 
 // Import Internal Dependencies
-import { RequestOptions, HttpMethod, WebDavMethod } from "./request";
-import { computeURI } from "./agents";
-import * as Utils from "./utils";
+import {
+  type RequestOptions,
+  type HttpMethod,
+  type WebDavMethod
+} from "./request.js";
+import { computeURI } from "./agents.js";
+import * as Utils from "./utils.js";
 
 export type StreamOptions = Omit<RequestOptions, "limit">;
 

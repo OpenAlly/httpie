@@ -1,5 +1,5 @@
 import * as httpie from "../dist/index.js";
-// import * as httpie from "@myunisoft/httpie";
+// import * as httpie from "@openally/httpie";
 
 {
   const { data } = await httpie.request<Buffer>("GET", "127.0.0.1", { mode: "raw" });

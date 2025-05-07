@@ -1,6 +1,6 @@
 // Import Internal Dependencies
-import { HttpieError } from "./HttpieCommonError";
-import { RequestResponse } from "../request";
+import { HttpieError } from "./HttpieCommonError.js";
+import { type RequestResponse } from "../request.js";
 
 /**
  * @description Class to generate an Error with all the required properties from the response.

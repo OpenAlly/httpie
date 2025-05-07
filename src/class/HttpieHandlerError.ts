@@ -1,8 +1,12 @@
 /* eslint-disable max-classes-per-file */
 
-// Import Third-party Dependencies
-import { HttpieError, HttpieErrorOptions } from "./HttpieCommonError";
-import { getDecompressionError, getFetchError, getParserError } from "../common/errors";
+// Import Internal Dependencies
+import { HttpieError, type HttpieErrorOptions } from "./HttpieCommonError.js";
+import {
+  getDecompressionError,
+  getFetchError,
+  getParserError
+} from "../common/errors.js";
 
 type MessageOfGetDecompressionError = Parameters<typeof getDecompressionError>[0]["message"];
 type MessageOfGetParserError = Parameters<typeof getParserError>[0]["message"];

@@ -3,8 +3,12 @@ import { Agent, ProxyAgent, MockAgent } from "undici";
 import { LRUCache } from "lru-cache";
 
 // Import Internal Dependencies
-import { InlineCallbackAction, HttpMethod, WebDavMethod } from "./request";
-import { getCurrentEnv } from "./utils";
+import {
+  type InlineCallbackAction,
+  type HttpMethod,
+  type WebDavMethod
+} from "./request.js";
+import { getCurrentEnv } from "./utils.js";
 
 // CONSTANTS
 const kEnvName = getCurrentEnv();
@@ -12,7 +16,7 @@ const kEnvName = getCurrentEnv();
 /**
  * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm
  */
-export const URICache = new LRUCache<string | URL, computedUrlAndAgent>({
+export const URI_CACHE = new LRUCache<string | URL, computedUrlAndAgent>({
   max: 100,
   ttl: 1_000 * 60 * 120
 });
@@ -102,8 +106,8 @@ export function computeURI(
   uri: string | URL
 ): computedUrlAndAgent {
   const uriStr = method.toUpperCase() + uri.toString();
-  if (URICache.has(uriStr)) {
-    return URICache.get(uriStr)!;
+  if (URI_CACHE.has(uriStr)) {
+    return URI_CACHE.get(uriStr)!;
   }
 
   let response: computedUrlAndAgent;
@@ -115,7 +119,7 @@ export function computeURI(
 
     response = { url: uri, agent: agent?.agent ?? null, limit: agent?.limit };
   }
-  URICache.set(uriStr, response);
+  URI_CACHE.set(uriStr, response);
 
   return response;
 }

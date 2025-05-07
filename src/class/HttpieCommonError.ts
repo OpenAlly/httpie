@@ -1,5 +1,5 @@
 // Import Third-party Dependencies
-import { IncomingHttpHeaders } from "undici/types/header";
+import { type IncomingHttpHeaders } from "undici/types/header.js";
 
 type CommonResponseData = {
   statusCode: number;

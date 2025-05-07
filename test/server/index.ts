@@ -14,7 +14,7 @@ import { CustomHttpAgent, agents } from "../../src/agents";
 const kFixturesPath = path.join(__dirname, "..", "fixtures");
 
 const toUpperCase = new Transform({
-  transform(chunk, enc, next) {
+  transform(chunk, _enc, next) {
     for (let id = 0; id < chunk.length; id++) {
       const char = chunk[id];
       chunk[id] = char < 97 || char > 122 ? char : char - 32;
@@ -49,7 +49,7 @@ export async function createServer(customPath = "local", port = 3000) {
 
   server.get("/qs", async(request) => request.query);
 
-  server.get("/home", (request, reply) => {
+  server.get("/home", (_request, reply) => {
     reply.send(
       fs.createReadStream(path.join(kFixturesPath, "home.html"))
     );
@@ -61,36 +61,36 @@ export async function createServer(customPath = "local", port = 3000) {
     );
   });
 
-  server.get("/redirect", (request, reply) => {
+  server.get("/redirect", (_request, reply) => {
     reply.redirect("/");
   });
 
-  server.get("/jsonError", (request, reply) => {
+  server.get("/jsonError", (_request, reply) => {
     reply.type("application/json");
     reply.send("{ 'foo': bar }");
   });
 
-  server.get("/notimplemented", (request, reply) => {
+  server.get("/notimplemented", (_request, reply) => {
     reply.code(501);
     reply.send();
   });
 
-  server.get("/internalerror", (request, reply) => {
+  server.get("/internalerror", (_request, reply) => {
     reply.code(500);
     reply.send();
   });
 
-  server.get("/badEncoding", (request, reply) => {
+  server.get("/badEncoding", (_request, reply) => {
     reply.header("content-encoding", "oui");
     reply.send("{ 'foo': bar }");
   });
 
-  server.get("/pdf", (request, reply) => {
+  server.get("/pdf", (_request, reply) => {
     reply.header("content-type", "application/pdf");
     reply.send("{ 'foo': bar }");
   });
 
-  server.get("/text", (request, reply) => {
+  server.get("/text", (_request, reply) => {
     reply.header("content-type", "text/anything");
     reply.send("text");
   });

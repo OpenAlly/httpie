@@ -8,8 +8,12 @@ import { Dispatcher } from "undici";
 import * as contentType from "content-type";
 
 // Import Internal Dependencies
-import { getEncodingCharset } from "../utils";
-import { HttpieDecompressionError, HttpieFetchBodyError, HttpieParserError } from "./HttpieHandlerError";
+import { getEncodingCharset } from "../utils.js";
+import {
+  HttpieDecompressionError,
+  HttpieFetchBodyError,
+  HttpieParserError
+} from "./HttpieHandlerError.js";
 
 const kAsyncGunzip = promisify(gunzip);
 const kDecompress = {

@@ -1,13 +1,15 @@
 /* eslint-disable max-lines */
-// Import Third-Party Dependencies
+// Import Node.js Dependencies
+import { brotliCompress, deflate, gzip } from "node:zlib";
+import { promisify } from "node:util";
+import { randomInt } from "node:crypto";
+
+// Import Third-party Dependencies
 import { Interceptable, MockAgent, setGlobalDispatcher } from "undici";
 
 // Import Internal Dependencies
 import { request } from "../src/request";
-import { brotliCompress, deflate, gzip } from "zlib";
-import { promisify } from "util";
 import { isHTTPError, isHttpieError } from "../src";
-import { randomInt } from "crypto";
 
 // CONSTANTS
 const kUrl = "http://test.com";

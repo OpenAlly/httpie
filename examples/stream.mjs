@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 // Third-party Dependencies
 import * as httpie from "../dist/index.js";
-// import * as httpie from "@myunisoft/httpie";
+// import * as httpie from "@openally/httpie";
 
 // CONSTANTS
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

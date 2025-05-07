@@ -7,7 +7,7 @@ Allows to restart http calls according to various criteria that we will call pol
 The httpcode by default retry on codes: `307`, `408`, `429`, `444`, `500`, `503`, `504`, `520`, `521`, `522`, `523`, `524`. However you can also choose to extend the list yourself:
 
 ```js
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 const policy = httpie.policies.httpcode(new Set([501]), true);
 ```
@@ -15,7 +15,7 @@ const policy = httpie.policies.httpcode(new Set([501]), true);
 ## Usage example
 
 ```js
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 const { data } = httpie.retry(async() => {
   return await httpie.get("https://jsonplaceholder.typicode.com/posts");

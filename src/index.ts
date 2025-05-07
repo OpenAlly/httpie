@@ -6,26 +6,26 @@ import {
   setGlobalDispatcher,
   getGlobalDispatcher,
   Headers,
-  HeadersInit,
+  type HeadersInit,
   FormData,
   File,
-  BodyInit,
+  type BodyInit,
   BodyMixin,
   MockAgent,
   mockErrors,
   MockPool,
-  Interceptable,
+  type Interceptable,
   Client
 } from "undici";
 
-export * from "./request";
-export * from "./stream";
-export * from "./retry";
-export * as policies from "./policies";
-export { agents, computeURI, type CustomHttpAgent } from "./agents";
-export { DEFAULT_HEADER, isHTTPError, isHttpieError } from "./utils";
-export { HttpieOnHttpError } from "./class/HttpieOnHttpError";
-export * from "./class/undiciResponseHandler";
+export * from "./request.js";
+export * from "./stream.js";
+export * from "./retry.js";
+export * as policies from "./policies/index.js";
+export { agents, computeURI, type CustomHttpAgent } from "./agents.js";
+export { DEFAULT_HEADER, isHTTPError, isHttpieError } from "./utils.js";
+export { HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
+export * from "./class/undiciResponseHandler.js";
 
 export {
   Agent,

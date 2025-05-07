@@ -1,5 +1,5 @@
 // Import Node.js Dependencies
-import { IncomingHttpHeaders } from "node:http";
+import { type IncomingHttpHeaders } from "node:http";
 import { URLSearchParams } from "node:url";
 
 // Import Third-party Dependencies
@@ -8,11 +8,20 @@ import { Result } from "@openally/result";
 import status from "statuses";
 
 // Import Internal Dependencies
-import * as Utils from "./utils";
-import { computeURI } from "./agents";
-import { HttpieResponseHandler, ModeOfHttpieResponseHandler } from "./class/undiciResponseHandler";
-import { HttpieOnHttpError } from "./class/HttpieOnHttpError";
-import { HttpieDecompressionError, HttpieFetchBodyError, HttpieParserError } from "./class/HttpieHandlerError";
+import * as Utils from "./utils.js";
+import { computeURI } from "./agents.js";
+import {
+  HttpieResponseHandler,
+  type ModeOfHttpieResponseHandler
+} from "./class/undiciResponseHandler.js";
+import {
+  HttpieOnHttpError
+} from "./class/HttpieOnHttpError.js";
+import {
+  HttpieDecompressionError,
+  HttpieFetchBodyError,
+  HttpieParserError
+} from "./class/HttpieHandlerError.js";
 
 export type WebDavMethod = "MKCOL" | "COPY" | "MOVE" | "LOCK" | "UNLOCK" | "PROPFIND" | "PROPPATCH";
 export type HttpMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";

@@ -1,7 +1,7 @@
 // Import Third-party Dependencies
 import { pRateLimit } from "p-ratelimit";
 import * as httpie from "../dist/index.js";
-// import * as httpie from "@myunisoft/httpie";
+// import * as httpie from "@openally/httpie";
 
 // Note: limit can also be provided to an Agent!
 const limit = pRateLimit({

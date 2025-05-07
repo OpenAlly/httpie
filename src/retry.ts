@@ -1,6 +1,6 @@
 // Import Internal Dependencies
-import Operation, { OperationResult } from "./class/Operation.class";
-import { PolicyCallback, none } from "./policies";
+import Operation, { type OperationResult } from "./class/Operation.class.js";
+import { type PolicyCallback, none } from "./policies/index.js";
 
 /**
  * Those options are inspired by the retry package

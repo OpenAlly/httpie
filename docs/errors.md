@@ -13,14 +13,14 @@ interface HttpieError {
 
 ### isHttpieError
 
-The `isHttpieError` function can be used to find out weither the error is a `@myunisoft/httpie` or a `undici` error.
+The `isHttpieError` function can be used to find out weither the error is a `@openally/httpie` or a `undici` error.
 ```ts
 function isHttpieError(error: unknown): boolean;
 ```
 
 Example:
 ```ts
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 try {
   await httpie.request("GET", "127.0.0.1");
@@ -48,7 +48,7 @@ function isHTTPError(error: unknown): boolean;
 
 Example:
 ```ts
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 try {
   await httpie.request("GET", "127.0.0.1");

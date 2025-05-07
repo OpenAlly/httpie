@@ -3,7 +3,7 @@
 import { randomBytes } from "node:crypto";
 
 // Import Third-party Dependencies
-import { brotliCompressSync, deflateSync, gzipSync } from "zlib";
+import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
 
 // Import Internal Dependencies
 import { HttpieResponseHandler } from "../src/class/undiciResponseHandler";

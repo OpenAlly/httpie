@@ -8,20 +8,20 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/MyUnisoft/httpie">
-      <img src="https://img.shields.io/github/package-json/v/MyUnisoft/httpie?style=flat-square" alt="npm version">
+    <a href="https://github.com/OpenAlly/httpie">
+      <img src="https://img.shields.io/github/package-json/v/OpenAlly/httpie?style=flat-square" alt="npm version">
     </a>
-    <a href="https://github.com/MyUnisoft/httpie">
-      <img src="https://img.shields.io/github/license/MyUnisoft/httpie?style=flat-square" alt="license">
+    <a href="https://github.com/OpenAlly/httpie">
+      <img src="https://img.shields.io/github/license/OpenAlly/httpie?style=flat-square" alt="license">
     </a>
-    <a href="https://api.securityscorecards.dev/projects/github.com/MyUnisoft/httpie">
-      <img src="https://api.securityscorecards.dev/projects/github.com/MyUnisoft/httpie/badge" alt="ossf scorecard">
+    <a href="https://api.securityscorecards.dev/projects/github.com/OpenAlly/httpie">
+      <img src="https://api.securityscorecards.dev/projects/github.com/OpenAlly/httpie/badge" alt="ossf scorecard">
     </a>
-    <a href="https://github.com/MyUnisoft/httpie/actions?query=workflow%3A%22Node.js+CI%22">
-      <img src="https://img.shields.io/github/actions/workflow/status/MyUnisoft/httpie/node.js.yml" alt="github ci workflow">
+    <a href="https://github.com/OpenAlly/httpie/actions?query=workflow%3A%22Node.js+CI%22">
+      <img src="https://img.shields.io/github/actions/workflow/status/OpenAlly/httpie/node.js.yml" alt="github ci workflow">
     </a>
-    <a href="https://github.com/MyUnisoft/httpie">
-      <img src="https://img.shields.io/github/languages/code-size/MyUnisoft/httpie?style=flat-square" alt="size">
+    <a href="https://github.com/OpenAlly/httpie">
+      <img src="https://img.shields.io/github/languages/code-size/OpenAlly/httpie?style=flat-square" alt="size">
     </a>
 </p>
 
@@ -58,17 +58,17 @@ Light with seriously maintained dependencies:
 This package is available in the Node Package Repository and can be easily installed with [npm](https://docs.npmjs.com/getting-started/what-is-npm) or [yarn](https://yarnpkg.com).
 
 ```bash
-$ npm i @myunisoft/httpie
+$ npm i @openally/httpie
 # or
-$ yarn add @myunisoft/httpie
+$ yarn add @openally/httpie
 ```
 
 ## 📚 Usage example
 
-The MyUnisoft httpie client is very similar to lukeed httpie http client.
+This client is very similar to lukeed httpie http client.
 
 ```js
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 try {
   const { data } = await httpie.get("https://jsonplaceholder.typicode.com/posts");
@@ -97,7 +97,7 @@ catch (error) {
 Since v2.0.0 you can also use the `safe` prefix API to get a `Promise<Result<T, E>>`
 
 ```ts
-import * as httpie from "@myunisoft/httpie";
+import * as httpie from "@openally/httpie";
 
 const response = (await httpie.safePost("https://jsonplaceholder.typicode.com/posts", {
   body: {
@@ -138,9 +138,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/thomas-gentilhomme/"><img src="https://avatars.githubusercontent.com/u/4438263?v=4?s=100" width="100px;" alt="Gentilhomme"/><br /><sub><b>Gentilhomme</b></sub></a><br /><a href="https://github.com/MyUnisoft/httpie/commits?author=fraxken" title="Code">💻</a> <a href="https://github.com/MyUnisoft/httpie/commits?author=fraxken" title="Documentation">📖</a> <a href="https://github.com/MyUnisoft/httpie/pulls?q=is%3Apr+reviewed-by%3Afraxken" title="Reviewed Pull Requests">👀</a> <a href="#security-fraxken" title="Security">🛡️</a> <a href="https://github.com/MyUnisoft/httpie/issues?q=author%3Afraxken" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/PierreDemailly"><img src="https://avatars.githubusercontent.com/u/39910767?v=4?s=100" width="100px;" alt="PierreDemailly"/><br /><sub><b>PierreDemailly</b></sub></a><br /><a href="https://github.com/MyUnisoft/httpie/commits?author=PierreDemailly" title="Code">💻</a> <a href="https://github.com/MyUnisoft/httpie/commits?author=PierreDemailly" title="Tests">⚠️</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://sofiand.github.io/portfolio-client/"><img src="https://avatars.githubusercontent.com/u/39944043?v=4?s=100" width="100px;" alt="Yefis"/><br /><sub><b>Yefis</b></sub></a><br /><a href="https://github.com/MyUnisoft/httpie/commits?author=SofianD" title="Code">💻</a> <a href="https://github.com/MyUnisoft/httpie/issues?q=author%3ASofianD" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.linkedin.com/in/thomas-gentilhomme/"><img src="https://avatars.githubusercontent.com/u/4438263?v=4?s=100" width="100px;" alt="Gentilhomme"/><br /><sub><b>Gentilhomme</b></sub></a><br /><a href="https://github.com/OpenAlly/httpie/commits?author=fraxken" title="Code">💻</a> <a href="https://github.com/OpenAlly/httpie/commits?author=fraxken" title="Documentation">📖</a> <a href="https://github.com/OpenAlly/httpie/pulls?q=is%3Apr+reviewed-by%3Afraxken" title="Reviewed Pull Requests">👀</a> <a href="#security-fraxken" title="Security">🛡️</a> <a href="https://github.com/OpenAlly/httpie/issues?q=author%3Afraxken" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/PierreDemailly"><img src="https://avatars.githubusercontent.com/u/39910767?v=4?s=100" width="100px;" alt="PierreDemailly"/><br /><sub><b>PierreDemailly</b></sub></a><br /><a href="https://github.com/OpenAlly/httpie/commits?author=PierreDemailly" title="Code">💻</a> <a href="https://github.com/OpenAlly/httpie/commits?author=PierreDemailly" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://sofiand.github.io/portfolio-client/"><img src="https://avatars.githubusercontent.com/u/39944043?v=4?s=100" width="100px;" alt="Yefis"/><br /><sub><b>Yefis</b></sub></a><br /><a href="https://github.com/OpenAlly/httpie/commits?author=SofianD" title="Code">💻</a> <a href="https://github.com/OpenAlly/httpie/issues?q=author%3ASofianD" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>

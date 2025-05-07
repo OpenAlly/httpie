@@ -1,4 +1,4 @@
-// Import Third-Party Dependencies
+// Import Third-party Dependencies
 import { MockAgent, setGlobalDispatcher } from "undici";
 
 // Import Internal Dependencies
