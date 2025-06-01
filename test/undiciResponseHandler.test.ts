@@ -1,6 +1,8 @@
 
 // Import Node.js Dependencies
 import { randomBytes } from "node:crypto";
+import { describe, it } from "node:test";
+import assert from "node:assert";
 
 // Import Third-party Dependencies
 import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
@@ -24,7 +26,7 @@ describe("HttpieResponseHandler.getData", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData();
 
-    expect(data).toMatchObject(payload);
+    assert.deepEqual(data, payload);
   });
 });
 
@@ -38,11 +40,11 @@ describe("HttpieResponseHandler.getData (mode: 'raw')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("raw");
 
-    expect(data).toMatchObject(payload);
+    assert.deepEqual(data, payload);
   });
 
-  it("should throw HttpieFetchBodyError", async() => {
-    expect.assertions(4);
+  it("should throw HttpieFetchBodyError", async(t) => {
+    t.plan(4);
 
     const errMsg = "unexpected error";
     const mockResponse = {
@@ -59,11 +61,13 @@ describe("HttpieResponseHandler.getData (mode: 'raw')", () => {
       await handler.getData();
     }
     catch (error: any) {
-      expect(error.name).toStrictEqual("ResponseFetchError");
-      expect(error.message)
-        .toStrictEqual(`An unexpected error occurred while trying to retrieve the response body (reason: '${errMsg}').`);
-      expect(error.statusCode).toStrictEqual(mockResponse.statusCode);
-      expect(error.headers).toStrictEqual(mockResponse.headers);
+      t.assert.equal(error.name, "ResponseFetchError");
+      t.assert.equal(
+        error.message,
+        `An unexpected error occurred while trying to retrieve the response body (reason: '${errMsg}').`
+      );
+      t.assert.equal(error.statusCode, mockResponse.statusCode);
+      t.assert.deepEqual(error.headers, mockResponse.headers);
     }
   });
 });
@@ -79,11 +83,11 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
-  it("must throw when the 'content-encoding' header is set with an unknown value", async() => {
-    expect.assertions(6);
+  it("must throw when the 'content-encoding' header is set with an unknown value", async(t) => {
+    t.plan(6);
 
     const buf = Buffer.from("hello world!");
     const encoding = randomBytes(4).toString("hex");
@@ -98,17 +102,17 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
       await handler.getData("decompress");
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual(`Unsupported encoding '${encoding}'.`);
-      expect(error.buffer).toStrictEqual(buf);
-      expect(error.encodings).toStrictEqual([encoding]);
-      expect(error.name).toStrictEqual("DecompressionNotSupported");
-      expect(error.statusCode).toStrictEqual(mockResponse.statusCode);
-      expect(error.headers).toStrictEqual(mockResponse.headers);
+      t.assert.equal(error.message, `Unsupported encoding '${encoding}'.`);
+      t.assert.deepEqual(error.buffer, buf);
+      t.assert.deepEqual(error.encodings, [encoding]);
+      t.assert.equal(error.name, "DecompressionNotSupported");
+      t.assert.equal(error.statusCode, mockResponse.statusCode);
+      t.assert.deepEqual(error.headers, mockResponse.headers);
     }
   });
 
-  it("must throw when the 'content-encoding' header is a list that includes an unknown value", async() => {
-    expect.assertions(6);
+  it("must throw when the 'content-encoding' header is a list that includes an unknown value", async(t) => {
+    t.plan(6);
 
     const buf = Buffer.from("hello world!");
     const encoding = randomBytes(4).toString("hex");
@@ -123,12 +127,12 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
       await handler.getData("decompress");
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual(`Unsupported encoding '${encoding}'.`);
-      expect(error.buffer).toStrictEqual(buf);
-      expect(error.encodings).toStrictEqual([encoding]);
-      expect(error.name).toStrictEqual("DecompressionNotSupported");
-      expect(error.statusCode).toStrictEqual(mockResponse.statusCode);
-      expect(error.headers).toStrictEqual(mockResponse.headers);
+      t.assert.equal(error.message, `Unsupported encoding '${encoding}'.`);
+      t.assert.deepEqual(error.buffer, buf);
+      t.assert.deepEqual(error.encodings, [encoding]);
+      t.assert.equal(error.name, "DecompressionNotSupported");
+      t.assert.equal(error.statusCode, mockResponse.statusCode);
+      t.assert.deepEqual(error.headers, mockResponse.headers);
     }
   });
 
@@ -142,7 +146,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
   it(`must use 'gunzip' before to returning an uncompressed buffer
@@ -155,7 +159,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
   it(`must use 'brotliDecompress' before to returning an uncompressed buffer
@@ -168,7 +172,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
   it(`must use 'inflate' before to returning an uncompressed buffer
@@ -181,7 +185,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
   it("must decompress in reverse order of the given encodings list when there are multiple compression types", async() => {
@@ -194,7 +198,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 
   it("must decompress in reverse order of the given encodings string when there are multiple compression types", async() => {
@@ -207,7 +211,7 @@ describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("decompress");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 });
 
@@ -221,11 +225,11 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("parse");
 
-    expect(data).toMatchObject(payload);
+    assert.deepEqual(data, payload);
   });
 
-  it("should parse an invalid JSON response but still keep the request data in the Error", async() => {
-    expect.assertions(5);
+  it("should parse an invalid JSON response but still keep the request data in the Error", async(t) => {
+    t.plan(5);
 
     const payload = "{\"foo\": bar}";
     const buf = Buffer.from("{\"foo\": bar}");
@@ -240,11 +244,11 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
       await handler.getData("parse");
     }
     catch (error: any) {
-      expect(error.text).toStrictEqual(payload);
-      expect(error.buffer).toStrictEqual(buf);
-      expect(error.name).toStrictEqual("ResponseParsingError");
-      expect(error.statusCode).toStrictEqual(mockResponse.statusCode);
-      expect(error.headers).toMatchObject(mockResponse.headers);
+      t.assert.equal(error.text, payload);
+      t.assert.deepEqual(error.buffer, buf);
+      t.assert.equal(error.name, "ResponseParsingError");
+      t.assert.equal(error.statusCode, mockResponse.statusCode);
+      t.assert.deepEqual(error.headers, mockResponse.headers);
     }
   });
 
@@ -259,7 +263,7 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("parse");
 
-    expect(data).toStrictEqual(payload);
+    assert.deepEqual(data, payload);
   });
 
   it("must converting it to a string when the 'content-type' header starts with 'text/'", async() => {
@@ -271,7 +275,7 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("parse");
 
-    expect(data).toStrictEqual(payload);
+    assert.deepEqual(data, payload);
   });
 
   it("must converting body to JSON when the 'content-type' header is set with 'application/json'", async() => {
@@ -284,7 +288,7 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("parse");
 
-    expect(data).toStrictEqual(payload);
+    assert.deepEqual(data, payload);
   });
 
   it("must return the original buffer when 'content-type' header is set with 'application/pdf'", async() => {
@@ -297,6 +301,6 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
     const handler = new HttpieResponseHandler(mockResponse as any);
     const data = await handler.getData("parse");
 
-    expect(data).toStrictEqual(buf);
+    assert.deepEqual(data, buf);
   });
 });

@@ -24,7 +24,9 @@ export function isAsyncIterable(value: any): boolean {
  * @description Get a valid Node.js charset from the "content-type" http header.
  * @see https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings
  */
-export function getEncodingCharset(charset = kDefaultEncodingCharset): BufferEncoding {
+export function getEncodingCharset(
+  charset = kDefaultEncodingCharset
+): BufferEncoding {
   if (Buffer.isEncoding(charset)) {
     return charset as BufferEncoding;
   }
@@ -37,7 +39,9 @@ export function getEncodingCharset(charset = kDefaultEncodingCharset): BufferEnc
  * - User-agent
  * - Authorization
  */
-export function createHeaders(options: Partial<Pick<RequestOptions, "headers" | "authorization">>): IncomingHttpHeaders {
+export function createHeaders(
+  options: Partial<Pick<RequestOptions, "headers" | "authorization">>
+): IncomingHttpHeaders {
   const headers = Object.assign({ ...DEFAULT_HEADER }, options.headers ?? {});
 
   if (options.authorization) {
@@ -47,7 +51,9 @@ export function createHeaders(options: Partial<Pick<RequestOptions, "headers" | 
   return headers;
 }
 
-export function isHttpieError(error: unknown): error is HttpieError {
+export function isHttpieError(
+  error: unknown
+): error is HttpieError {
   return error instanceof HttpieError;
 }
 
@@ -63,7 +69,10 @@ export function createBody(body: any, headers?: IncomingHttpHeaders): string | B
 /**
  * @description Generate a proper body for Undici Client. This method was mainly created to automatically manage JSON content.
  */
-export function createBody(body: any, headers: IncomingHttpHeaders = {}): string | Buffer | undefined {
+export function createBody(
+  body: any,
+  headers: IncomingHttpHeaders = {}
+): string | Buffer | undefined {
   if (typeof body === "undefined") {
     return void 0;
   }
@@ -89,25 +98,12 @@ export function createBody(body: any, headers: IncomingHttpHeaders = {}): string
  * @description Helpers to generate a Basic or Bearer token for the HTTP Authorization header.
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
  */
-export function createAuthorizationHeader(authorizationHeaderValue: string): string {
+export function createAuthorizationHeader(
+  authorizationHeaderValue: string
+): string {
   const isBasicAuthToken = authorizationHeaderValue.includes(":");
 
   return isBasicAuthToken ?
     `Basic ${Buffer.from(authorizationHeaderValue).toString("base64")}` :
     `Bearer ${authorizationHeaderValue}`;
-}
-
-export const env = process.env;
-
-export function getCurrentEnv() {
-  const currentEnv: string = (env.NODE_ENV ?? "dev").toLowerCase();
-
-  if (currentEnv.startsWith("prod")) {
-    return "prod";
-  }
-  else if (currentEnv.startsWith("staging") || currentEnv.startsWith("preprod")) {
-    return "preprod";
-  }
-
-  return "dev";
 }

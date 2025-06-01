@@ -1,3 +1,6 @@
+// Import Node.js Dependencies
+import { describe, it } from "node:test";
+
 // Import Third-party Dependencies
 import { MockAgent, setGlobalDispatcher } from "undici";
 
@@ -5,8 +8,8 @@ import { MockAgent, setGlobalDispatcher } from "undici";
 import { request } from "../src/request";
 
 describe("HttpieOnHttpError", () => {
-  it("it should create an HttpieOnHttpError with the properties of RequestResponse", async() => {
-    expect.assertions(2);
+  it("it should create an HttpieOnHttpError with the properties of RequestResponse", async(t) => {
+    t.plan(2);
 
     const expectedResponseData = {
       statusCode: 404,
@@ -34,8 +37,13 @@ describe("HttpieOnHttpError", () => {
       await request(targetUrl.method as any, path);
     }
     catch (error: any) {
-      expect(error.name).toStrictEqual("HttpieOnHttpError");
-      expect(error).toMatchObject(expectedResponseData);
+      const { data, headers, statusCode, statusMessage } = error;
+
+      t.assert.equal(error.name, "HttpieOnHttpError");
+      t.assert.deepEqual(
+        { data, headers, statusCode, statusMessage },
+        expectedResponseData
+      );
     }
   });
 });

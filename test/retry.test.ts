@@ -1,24 +1,26 @@
+// Import Node.js Dependencies
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert";
+
 // Import Third-party Dependencies
 import { FastifyInstance } from "fastify";
 
 // Import Internal Dependencies
-import { retry, get, policies } from "../src/index";
-
-// Helpers and mock
-import { createServer } from "./server/index";
+import { retry, get, policies } from "../src/index.js";
+import { createServer } from "./server/index.js";
 
 let httpServer: FastifyInstance;
-beforeAll(async() => {
+before(async() => {
   httpServer = await createServer("retry", 1337);
 });
 
-afterAll(async() => {
+after(async() => {
   await httpServer.close();
 });
 
 describe("retry (with default policy)", () => {
-  it("should throw an Error because the number of retries has been exceeded", async() => {
-    expect.assertions(1);
+  it("should throw an Error because the number of retries has been exceeded", async(t) => {
+    t.plan(1);
 
     try {
       await retry(() => {
@@ -26,7 +28,7 @@ describe("retry (with default policy)", () => {
       }, { factor: 1 });
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual("Exceeded the maximum number of allowed retries!");
+      t.assert.equal(error.message, "Exceeded the maximum number of allowed retries!");
     }
   });
 
@@ -42,14 +44,14 @@ describe("retry (with default policy)", () => {
       return "hello world!";
     });
 
-    expect(data).toStrictEqual("hello world!");
-    expect(metrics.attempt).toStrictEqual(1);
-    expect(typeof metrics.elapsedTimeoutTime).toStrictEqual("number");
-    expect(typeof metrics.executionTimestamp).toStrictEqual("number");
+    assert.equal(data, "hello world!");
+    assert.equal(metrics.attempt, 1);
+    assert.equal(typeof metrics.elapsedTimeoutTime, "number");
+    assert.equal(typeof metrics.executionTimestamp, "number");
   });
 
-  it("should be stopped with Node.js AbortController", async() => {
-    expect.assertions(1);
+  it("should be stopped with Node.js AbortController", async(t) => {
+    t.plan(1);
 
     let count = 0;
     const controller = new AbortController();
@@ -66,36 +68,36 @@ describe("retry (with default policy)", () => {
       }, { forever: true, signal: controller.signal });
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual("Aborted");
+      t.assert.equal(error.message, "Aborted");
     }
   });
 });
 
 describe("retry (with http policy)", () => {
-  it("should throw an Error because the number of retries has been exceeded", async() => {
-    expect.assertions(1);
+  it("should throw an Error because the number of retries has been exceeded", async(t) => {
+    t.plan(1);
 
     try {
       await retry(async() => get("/retry/internalerror"), { factor: 1, retries: 2 }, policies.httpcode());
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual("Exceeded the maximum number of allowed retries!");
+      t.assert.equal(error.message, "Exceeded the maximum number of allowed retries!");
     }
   });
 
-  it("should return the http error because the code (501) is not supported by the policy", async() => {
-    expect.assertions(1);
+  it("should return the http error because the code (501) is not supported by the policy", async(t) => {
+    t.plan(1);
 
     try {
       await retry(async() => get("/retry/notimplemented"), { factor: 1, retries: 2 }, policies.httpcode());
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual("Not Implemented");
+      t.assert.equal(error.message, "Not Implemented");
     }
   });
 
-  it("should include code 501 and all other default port", async() => {
-    expect.assertions(1);
+  it("should include code 501 and all other default port", async(t) => {
+    t.plan(1);
 
     try {
       const policy = policies.httpcode(new Set([501]), true);
@@ -103,7 +105,7 @@ describe("retry (with http policy)", () => {
       await retry(async() => get("/retry/notimplemented"), { factor: 1, retries: 2 }, policy);
     }
     catch (error: any) {
-      expect(error.message).toStrictEqual("Exceeded the maximum number of allowed retries!");
+      t.assert.equal(error.message, "Exceeded the maximum number of allowed retries!");
     }
   });
 });

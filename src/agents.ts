@@ -8,10 +8,6 @@ import {
   type HttpMethod,
   type WebDavMethod
 } from "./request.js";
-import { getCurrentEnv } from "./utils.js";
-
-// CONSTANTS
-const kEnvName = getCurrentEnv();
 
 /**
  * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm
@@ -32,11 +28,8 @@ export interface computedUrlAndAgent {
  */
 export interface CustomHttpAgent {
   customPath: string;
-  domains: Set<string>;
+  origin: string;
   agent: Agent | ProxyAgent | MockAgent;
-  prod: string;
-  preprod: string;
-  dev: string;
   limit?: InlineCallbackAction;
 }
 
@@ -49,12 +42,15 @@ export const agents: Set<CustomHttpAgent> = new Set();
  * const URI = computeAgentPath("/windev/ws_monitoring", windev);
  * assert.strictEqual(URI, "https://ws-dev.myunisoft.fr/ws_monitoring");
  */
-export function isAgentPathMatchingURI(uri: string, agent: CustomHttpAgent): URL | null {
+export function isAgentPathMatchingURI(
+  uri: string,
+  agent: CustomHttpAgent
+): URL | null {
   // Note: we want to match both '/path/xxx...' and 'path/xxx...'
   const localCustomPath = uri.charAt(0) === "/" ? `/${agent.customPath}` : agent.customPath;
 
   return uri.startsWith(localCustomPath) ?
-    new URL(uri.slice(localCustomPath.length), agent[kEnvName]) :
+    new URL(uri.slice(localCustomPath.length), agent.origin) :
     null;
 }
 
@@ -89,7 +85,7 @@ export function detectAgentFromURI(uri: URL): CustomHttpAgent | null {
   const hostname = uri.hostname;
 
   for (const agent of agents) {
-    if (agent.domains.has(hostname)) {
+    if (new URL(agent.origin).hostname === hostname) {
       return agent;
     }
   }

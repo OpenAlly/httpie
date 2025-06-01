@@ -95,7 +95,7 @@ export async function request<T>(
   const statusCode = requestResponse.statusCode;
   const responseHandler = new HttpieResponseHandler(requestResponse);
 
-  let data;
+  let data: any;
   if (options.mode === "parse" || !options.mode) {
     data = await responseHandler.getData<T>("parse");
   }

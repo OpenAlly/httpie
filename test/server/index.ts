@@ -11,6 +11,7 @@ import * as undici from "undici";
 import { CustomHttpAgent, agents } from "../../src/agents";
 
 // CONSTANTS
+const __dirname = import.meta.dirname;
 const kFixturesPath = path.join(__dirname, "..", "fixtures");
 
 const toUpperCase = new Transform({
@@ -29,15 +30,10 @@ export async function createServer(customPath = "local", port = 3000) {
   const server = fastify({ logger: false });
   const serverAgent: CustomHttpAgent = {
     customPath,
-    domains: new Set([
-      `localhost:${port}`
-    ]),
     agent: new undici.Agent({
       connections: 10
     }),
-    prod: `http://localhost:${port}/`,
-    preprod: `http://localhost:${port}/`,
-    dev: `http://localhost:${port}/`
+    origin: `http://localhost:${port}/`
   };
   agents.add(serverAgent);
 
