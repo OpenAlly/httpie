@@ -31,8 +31,7 @@ after(async() => {
 });
 
 describe("stream", () => {
-  // FIX: maxRedirections doesn't work ?
-  it.skip("should use callback dispatcher to init headers/statusCode etc.", async() => {
+  it("should use callback dispatcher to init headers/statusCode etc.", async() => {
     const fileDestination = path.join(kDownloadPath, "fs-walk-main.tar.gz");
     const repositoryURL = new URL("NodeSecure/fs-walk/archive/main.tar.gz", kGithubURL);
 

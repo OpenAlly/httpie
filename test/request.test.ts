@@ -40,8 +40,7 @@ describe("http.get", () => {
     assert.equal(data.name, "foobar");
   });
 
-  // FIX: maxRedirections do not work
-  it.skip("should GET uptime by following an HTTP redirection from local fastify server", async() => {
+  it("should GET uptime by following an HTTP redirection from local fastify server", async() => {
     const { data } = await get<{ uptime: number; }>("/local/redirect", { maxRedirections: 1 });
 
     assert.ok("uptime" in data);

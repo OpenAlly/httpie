@@ -2,6 +2,7 @@
 import {
   Agent,
   ProxyAgent,
+  interceptors,
   fetch,
   setGlobalDispatcher,
   getGlobalDispatcher,
@@ -16,6 +17,10 @@ import {
   Client
 } from "undici";
 
+setGlobalDispatcher(
+  new Agent().compose(interceptors.redirect())
+);
+
 export * from "./request.js";
 export * from "./stream.js";
 export * from "./retry.js";
@@ -28,6 +33,7 @@ export * from "./class/undiciResponseHandler.js";
 export {
   Agent,
   ProxyAgent,
+  interceptors,
   fetch,
   setGlobalDispatcher,
   getGlobalDispatcher,

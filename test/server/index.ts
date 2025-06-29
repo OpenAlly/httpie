@@ -32,7 +32,7 @@ export async function createServer(customPath = "local", port = 3000) {
     customPath,
     agent: new undici.Agent({
       connections: 10
-    }),
+    }).compose(undici.interceptors.redirect()),
     origin: `http://localhost:${port}/`
   };
   agents.add(serverAgent);
