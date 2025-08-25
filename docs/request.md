@@ -7,8 +7,6 @@ The method **options** and **response** are described by the following TypeScrip
 type ModeOfHttpieResponseHandler = "decompress" | "parse" | "raw";
 
 export interface RequestOptions {
-  /** @default 0 */
-  maxRedirections?: number;
   /** @default{ "user-agent": "httpie" } */
   headers?: IncomingHttpHeaders;
   querystring?: string | URLSearchParams;

@@ -7,7 +7,10 @@ import { FastifyInstance } from "fastify";
 import isHtml from "is-html";
 
 // Import Internal Dependencies
-import { get, post, put, patch, del, safeGet } from "../src/index.js";
+import {
+  get, post, put, patch, del, safeGet,
+  Agent, interceptors
+} from "../src/index.js";
 import { isHTTPError } from "../src/utils.js";
 import { createServer } from "./server/index.js";
 import { windev } from "./helpers.js";
@@ -41,7 +44,11 @@ describe("http.get", () => {
   });
 
   it("should GET uptime by following an HTTP redirection from local fastify server", async() => {
-    const { data } = await get<{ uptime: number; }>("/local/redirect", { maxRedirections: 1 });
+    const agent = new Agent()
+      .compose(interceptors.redirect({ maxRedirections: 2 }));
+    const { data } = await get<{ uptime: number; }>("/local/redirect", {
+      agent
+    });
 
     assert.ok("uptime" in data);
     assert.equal(typeof data.uptime, "number");

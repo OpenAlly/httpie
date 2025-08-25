@@ -33,14 +33,16 @@ after(async() => {
 describe("stream", () => {
   it("should use callback dispatcher to init headers/statusCode etc.", async() => {
     const fileDestination = path.join(kDownloadPath, "fs-walk-main.tar.gz");
-    const repositoryURL = new URL("NodeSecure/fs-walk/archive/main.tar.gz", kGithubURL);
+    const repositoryURL = new URL("NodeSecure/vulnera/archive/main.tar.gz", kGithubURL);
 
+    const agent = new httpie.Agent()
+      .compose(httpie.interceptors.redirect({ maxRedirections: 1 }));
     const cursor = httpie.stream("GET", repositoryURL, {
       headers: {
         "User-Agent": "httpie",
         "Accept-Encoding": "gzip, deflate"
       },
-      maxRedirections: 1
+      agent
     });
 
     let contentType = "";
@@ -58,15 +60,17 @@ describe("stream", () => {
   });
 
   it("should fetch a .tar.gz of a given github repository", async() => {
-    const fileDestination = path.join(kDownloadPath, "i18n-main.tar.gz");
-    const repositoryURL = new URL("NodeSecure/i18n/archive/main.tar.gz", kGithubURL);
+    const fileDestination = path.join(kDownloadPath, "vulnera-main.tar.gz");
+    const repositoryURL = new URL("NodeSecure/vulnera/archive/main.tar.gz", kGithubURL);
 
+    const agent = new httpie.Agent()
+      .compose(httpie.interceptors.redirect());
     await httpie.stream("GET", repositoryURL, {
       headers: {
         "User-Agent": "httpie",
         "Accept-Encoding": "gzip, deflate"
       },
-      maxRedirections: 1
+      agent
     })(() => createWriteStream(fileDestination));
 
     assert.ok(existsSync(fileDestination));

@@ -34,8 +34,6 @@ export type RequestError<T> =
   HttpieParserError;
 
 export interface RequestOptions {
-  /** @default 0 */
-  maxRedirections?: number;
   /** @default{ "user-agent": "httpie" } */
   headers?: IncomingHttpHeaders;
   querystring?: string | URLSearchParams;
@@ -71,8 +69,6 @@ export async function request<T>(
   uri: string | URL,
   options: RequestOptions = {}
 ): Promise<RequestResponse<T>> {
-  const { maxRedirections = 0 } = options;
-
   const computedURI = computeURI(method, uri);
   if (typeof options.querystring !== "undefined") {
     const qs = typeof options.querystring === "string" ? new URLSearchParams(options.querystring) : options.querystring;
@@ -87,7 +83,7 @@ export async function request<T>(
   const headers = Utils.createHeaders({ headers: options.headers, authorization: options.authorization });
   const body = Utils.createBody(options.body, headers);
 
-  const requestOptions = { method: method as HttpMethod, headers, body, dispatcher, maxRedirections };
+  const requestOptions = { method: method as HttpMethod, headers, body, dispatcher };
   const requestResponse = limit === null ?
     await undici.request(computedURI.url, requestOptions) :
     await limit(() => undici.request(computedURI.url, requestOptions));

@@ -36,12 +36,11 @@ The package is inspired by lukeed [httpie](https://github.com/lukeed/httpie) (Th
 - Includes aliases for common HTTP verbs: `get`, `post`, `put`, `patch`, and `del`.
 - Able to automatically detect domains and paths to assign the right Agent (use a LRU cache to avoid repetitive computation).
 - Allows to use an accurate rate-limiter like `p-ratelimit` with the `limit` option.
-- Built-in retry mechanism with **custom policies**.
 - Safe error handling with Rust-like [Result](https://github.com/OpenAlly/npm-packages/tree/main/src/result).
 
 Thanks to undici:
 
-- Support [HTTP redirections](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections) with the `maxRedirections` argument.
+- Support [redirections](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections) or retry using interceptors.
 - Implement high-level API for undici **stream** and **pipeline** method.
 - High performance (see [benchmarks](https://undici.nodejs.org/#/?id=benchmarks)).
 - Work well with **newest** Node.js API [AbortController](https://nodejs.org/dist/latest-v16.x/docs/api/globals.html#globals_class_abortcontroller) to cancel http request.
@@ -94,7 +93,7 @@ catch (error) {
 }
 ```
 
-Since v2.0.0 you can also use the `safe` prefix API to get a `Promise<Result<T, E>>`
+You can also use the `safe` prefix API to get a `Promise<Result<T, E>>`
 
 ```ts
 import * as httpie from "@openally/httpie";
@@ -111,18 +110,17 @@ const response = (await httpie.safePost("https://jsonplaceholder.typicode.com/po
   .unwrap();
 ```
 
-> 👀 For more examples of use please look at the root folder **examples**.
+> [!TIP]
+> More examples available in the root folder **examples**.
 
 ## 📜 API
 
 - [Request API](./docs/request.md)
-- [Retry API](./docs/retry.md)
 - [Work and manage Agents](./docs/agents.md)
 
 ## Error handling
 
 Read the [error documentation](./docs/errors.md).
-
 
 ## Contributors ✨
 

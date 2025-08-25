@@ -3,7 +3,6 @@ interface GetErrorOptions<T> {
   message: keyof T;
 }
 
-// from myu-utils
 function taggedString(chains: TemplateStringsArray, ...expectedValues: string[] | number[]) {
   return function cur(...args: any[]): string {
     const directory = args.at(-1) || {};

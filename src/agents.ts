@@ -12,12 +12,12 @@ import {
 /**
  * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm
  */
-export const URI_CACHE = new LRUCache<string | URL, computedUrlAndAgent>({
+export const URI_CACHE = new LRUCache<string | URL, ComputedUrlAndAgent>({
   max: 100,
   ttl: 1_000 * 60 * 120
 });
 
-export interface computedUrlAndAgent {
+export interface ComputedUrlAndAgent {
   url: URL;
   agent: Agent | ProxyAgent | MockAgent | null;
   limit?: InlineCallbackAction;
@@ -57,7 +57,7 @@ export function isAgentPathMatchingURI(
 /**
  * @description Compute a given string URI to the local list of agents.
  */
-export function computeURIOnAllAgents(uri: string): computedUrlAndAgent {
+export function computeURIOnAllAgents(uri: string): ComputedUrlAndAgent {
   for (const agent of agents) {
     const url = isAgentPathMatchingURI(uri, agent);
 
@@ -100,13 +100,13 @@ export function detectAgentFromURI(uri: URL): CustomHttpAgent | null {
 export function computeURI(
   method: HttpMethod | WebDavMethod,
   uri: string | URL
-): computedUrlAndAgent {
+): ComputedUrlAndAgent {
   const uriStr = method.toUpperCase() + uri.toString();
   if (URI_CACHE.has(uriStr)) {
     return URI_CACHE.get(uriStr)!;
   }
 
-  let response: computedUrlAndAgent;
+  let response: ComputedUrlAndAgent;
   if (typeof uri === "string") {
     response = computeURIOnAllAgents(uri);
   }
