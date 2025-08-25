@@ -1,3 +1,5 @@
 import { typescriptConfig } from "@openally/config.eslint";
 
-export default typescriptConfig();
+export default typescriptConfig({
+  ignores: ["./examples"]
+});

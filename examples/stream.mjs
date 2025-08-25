@@ -11,9 +11,14 @@ import * as httpie from "../dist/index.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const kGithubURL = new URL("https://github.com/");
 
-const cursor = httpie.stream("GET", new URL("NodeSecure/i18n/archive/main.tar.gz", kGithubURL), {
-  maxRedirections: 1
-});
+const agent = new httpie.Agent(
+  httpie.interceptors.redirect({ maxRedirections: 2 })
+);
+const cursor = httpie.stream(
+  "GET",
+  new URL("NodeSecure/vulnera/archive/main.tar.gz", kGithubURL),
+  { agent }
+);
 
 const writable = fs.createWriteStream(path.join(__dirname, "archive.tar.gz"));
 
