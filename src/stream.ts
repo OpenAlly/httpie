@@ -33,7 +33,11 @@ export function pipeline(
   const body = Utils.createBody(options.body, headers);
 
   return undici.pipeline(computedURI.url, {
-    method: method as HttpMethod, headers, body, dispatcher
+    method: method as HttpMethod,
+    headers,
+    body,
+    dispatcher,
+    blocking: options.blocking
   }, ({ body }) => body);
 }
 

@@ -39,6 +39,13 @@ export interface RequestOptions {
   querystring?: string | URLSearchParams;
   body?: any;
   authorization?: string;
+  /**
+   * Whether the response is expected to take a long time and would end up blocking the pipeline.
+   * When this is set to true further pipelining will be avoided on the same connection until headershave been received.
+   *
+   * Defaults to method !== 'HEAD'.
+   */
+  blocking?: boolean;
   // Could be dynamically computed depending on the provided URI.
   agent?: undici.Agent | undici.ProxyAgent | undici.MockAgent;
   /** @description API limiter from a package like `p-ratelimit`. */
@@ -83,7 +90,13 @@ export async function request<T>(
   const headers = Utils.createHeaders({ headers: options.headers, authorization: options.authorization });
   const body = Utils.createBody(options.body, headers);
 
-  const requestOptions = { method: method as HttpMethod, headers, body, dispatcher };
+  const requestOptions = {
+    method: method as HttpMethod,
+    headers,
+    body,
+    dispatcher,
+    blocking: options.blocking
+  };
   const requestResponse = limit === null ?
     await undici.request(computedURI.url, requestOptions) :
     await limit(() => undici.request(computedURI.url, requestOptions));
