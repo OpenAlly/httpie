@@ -13,12 +13,14 @@ import {
 import { computeURI } from "./agents.js";
 import * as Utils from "./utils.js";
 
-export type StreamOptions = Omit<RequestOptions, "limit">;
+export type StreamOptions<TOpaque = null> = Omit<RequestOptions, "limit"> & {
+  opaque?: TOpaque;
+};
 
-export function pipeline(
+export function pipeline<TOpaque = null>(
   method: HttpMethod | WebDavMethod,
   uri: string | URL,
-  options: StreamOptions = {}
+  options: StreamOptions<TOpaque> = {}
 ): Duplex {
   const computedURI = computeURI(method, uri);
   if (typeof options.querystring !== "undefined") {
@@ -41,15 +43,15 @@ export function pipeline(
   }, ({ body }) => body);
 }
 
-export type WritableStreamCallback = (
-  factory: undici.Dispatcher.StreamFactory
-) => Promise<undici.Dispatcher.StreamData>;
+export type WritableStreamCallback<TOpaque = null> = (
+  factory: undici.Dispatcher.StreamFactory<TOpaque>
+) => Promise<undici.Dispatcher.StreamData<TOpaque>>;
 
-export function stream(
+export function stream<TOpaque = null>(
   method: HttpMethod | WebDavMethod,
   uri: string | URL,
-  options: StreamOptions = {}
-): WritableStreamCallback {
+  options: StreamOptions<TOpaque> = {}
+): WritableStreamCallback<TOpaque> {
   const computedURI = computeURI(method, uri);
 
   const dispatcher = options.agent ?? computedURI.agent ?? void 0;
@@ -57,7 +59,7 @@ export function stream(
   const body = Utils.createBody(options.body, headers);
 
   return (factory) => undici
-    .stream(
+    .stream<TOpaque>(
       computedURI.url,
       { method: method as HttpMethod, headers, body, dispatcher },
       factory
