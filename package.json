@@ -34,7 +34,6 @@
     "@arethetypeswrong/cli": "^0.18.2",
     "@openally/config.eslint": "^2.2.0",
     "@openally/config.typescript": "1.2.1",
-    "@types/content-type": "^1.1.9",
     "@types/lru-cache": "^7.10.9",
     "@types/node": "24.9.1",
     "@types/statuses": "^2.0.6",
@@ -47,7 +46,6 @@
   },
   "dependencies": {
     "@openally/result": "^1.2.1",
-    "content-type": "^1.0.5",
     "lru-cache": "11.2.2",
     "statuses": "^2.0.2",
     "undici": "7.16.0"
