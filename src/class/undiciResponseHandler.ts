@@ -4,8 +4,11 @@ import { promisify } from "node:util";
 import { inflate, brotliDecompress, gunzip } from "node:zlib";
 
 // Import Third-party Dependencies
-import { Dispatcher } from "undici";
-import * as contentType from "content-type";
+import {
+  Dispatcher,
+  parseMIMEType,
+  type MIMEType
+} from "undici";
 
 // Import Internal Dependencies
 import { getEncodingCharset } from "../utils.js";
@@ -121,14 +124,17 @@ export class HttpieResponseHandler {
 
     let bodyAsString = "";
     try {
-      const { type, parameters } = contentType.parse(contentTypeHeader);
-      bodyAsString = buffer.toString(getEncodingCharset(parameters.charset));
+      const mime = parseMIMETypeWithError(contentTypeHeader);
 
-      if (type === "application/json") {
+      bodyAsString = buffer.toString(
+        getEncodingCharset(mime.parameters.get("charset"))
+      );
+
+      if (mime.essence === "application/json") {
         return JSON.parse(bodyAsString);
       }
 
-      if (type.startsWith("text/")) {
+      if (mime.essence.startsWith("text/")) {
         return bodyAsString;
       }
     }
@@ -146,4 +152,15 @@ export class HttpieResponseHandler {
 
     return buffer;
   }
+}
+
+function parseMIMETypeWithError(
+  mimeType: string
+): MIMEType {
+  const mime = parseMIMEType(mimeType);
+  if (mime === "failure") {
+    throw new Error("invalid media type");
+  }
+
+  return mime;
 }
