@@ -5,10 +5,10 @@ import { URLSearchParams } from "node:url";
 // Import Third-party Dependencies
 import * as undici from "undici";
 import { Result } from "@openally/result";
-import status from "statuses";
 
 // Import Internal Dependencies
 import * as Utils from "./utils.js";
+import { statuses } from "./codes.js";
 import { computeURI } from "./agents.js";
 import {
   HttpieResponseHandler,
@@ -114,7 +114,7 @@ export async function request<T>(
 
   const RequestResponse = {
     headers: requestResponse.headers,
-    statusMessage: status.message[requestResponse.statusCode]!,
+    statusMessage: statuses[requestResponse.statusCode]!,
     statusCode,
     data
   };
