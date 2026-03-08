@@ -4,7 +4,7 @@ import { URLSearchParams } from "node:url";
 
 // Import Third-party Dependencies
 import * as undici from "undici";
-import { Result } from "@openally/result";
+import { type Result, wrapAsync } from "@openally/result";
 
 // Import Internal Dependencies
 import * as Utils from "./utils.js";
@@ -132,7 +132,7 @@ export async function safeRequest<T, E>(
   uri: string | URL,
   options: RequestOptions = {}
 ): Promise<Result<RequestResponse<T>, RequestError<E>>> {
-  return Result.wrapAsync<RequestResponse<T>, RequestError<E>>(
+  return wrapAsync<RequestResponse<T>, RequestError<E>>(
     () => request(method, uri, options)
   );
 }
