@@ -46,6 +46,6 @@
   "dependencies": {
     "@openally/result": "2.0.0",
     "lru-cache": "11.2.6",
-    "undici": "7.22.0"
+    "undici": "7.24.4"
   }
 }
