@@ -14,6 +14,7 @@ import {
   mockErrors,
   MockPool,
   type Interceptable,
+  type Dispatcher,
   Client
 } from "undici";
 
@@ -43,5 +44,6 @@ export {
   mockErrors,
   MockPool,
   type Interceptable,
+  type Dispatcher,
   Client
 };
