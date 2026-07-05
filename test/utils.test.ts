@@ -67,6 +67,17 @@ describe("createHeaders", () => {
     assert.deepStrictEqual(result, { "user-agent": "myUserAgent" });
   });
 
+  it("should overwrite the default 'user-agent' header regardless of casing (no duplicate)", () => {
+    // A caller-provided header must replace the default one even when the casing
+    // differs, otherwise both 'user-agent' and 'User-Agent' end up in the object
+    // and HTTP/2 rejects the request with ERR_HTTP2_HEADER_SINGLE_VALUE.
+    const result = Utils.createHeaders({
+      headers: { "User-Agent": "myUserAgent" }
+    });
+
+    assert.deepStrictEqual(result, { "User-Agent": "myUserAgent" });
+  });
+
   it("should add authorization header (and override original property)", () => {
     const result = Utils.createHeaders({
       headers: {
