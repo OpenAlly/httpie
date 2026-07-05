@@ -35,6 +35,27 @@ export function getEncodingCharset(
 }
 
 /**
+ * @description Set a header case-insensitively, removing any existing entry that
+ * differs only by casing. HTTP header names are case-insensitive and HTTP/2 forbids
+ * singular headers (e.g. `user-agent`) from carrying multiple values, so we must not
+ * end up with both `user-agent` and `User-Agent` in the same object.
+ */
+function setHeader(
+  headers: IncomingHttpHeaders,
+  name: string,
+  value: IncomingHttpHeaders[string]
+): void {
+  const lowerName = name.toLowerCase();
+  for (const key of Object.keys(headers)) {
+    if (key.toLowerCase() === lowerName) {
+      delete headers[key];
+    }
+  }
+
+  headers[name] = value;
+}
+
+/**
  * @description Create a default plain Object headers that will contains a Set of default values like:
  * - User-agent
  * - Authorization
@@ -42,10 +63,14 @@ export function getEncodingCharset(
 export function createHeaders(
   options: Partial<Pick<RequestOptions, "headers" | "authorization">>
 ): IncomingHttpHeaders {
-  const headers = Object.assign({ ...DEFAULT_HEADER }, options.headers ?? {});
+  const headers: IncomingHttpHeaders = { ...DEFAULT_HEADER };
+
+  for (const [name, value] of Object.entries(options.headers ?? {})) {
+    setHeader(headers, name, value);
+  }
 
   if (options.authorization) {
-    headers.Authorization = createAuthorizationHeader(options.authorization);
+    setHeader(headers, "Authorization", createAuthorizationHeader(options.authorization));
   }
 
   return headers;
