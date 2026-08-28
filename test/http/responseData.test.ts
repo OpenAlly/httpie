@@ -3,32 +3,41 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { HttpieResponseHandler } from "../../src/http/responseHandler.ts";
+import { getResponseData } from "../../src/http/responseData.ts";
 import { toArrayBuffer } from "../helpers/buffer.ts";
 
-describe("HttpieResponseHandler.getData", () => {
+describe("getResponseData", () => {
   it("should return the parsed payload by default", async() => {
     const payload = { foo: "bar" };
     const mockResponse = {
       body: { arrayBuffer: () => toArrayBuffer(Buffer.from(JSON.stringify(payload))) },
       headers: { "content-type": "application/json" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData();
+    const data = await getResponseData(mockResponse as any);
 
     assert.deepEqual(data, payload);
   });
 });
 
-describe("HttpieResponseHandler.getData (mode: 'raw')", () => {
+describe("getResponseData (mode: 'raw')", () => {
   it("should return the rawBuffer", async() => {
     const payload = Buffer.from(JSON.stringify({ foo: "bar" }));
     const mockResponse = {
       body: { arrayBuffer: () => toArrayBuffer(payload) },
       headers: { "content-type": "application/json" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("raw");
+    const data = await getResponseData(mockResponse as any, "raw");
+
+    assert.deepEqual(data, payload);
+  });
+
+  it("must not decompress the body even when a 'content-encoding' header is set", async() => {
+    const payload = Buffer.from("hello world!");
+    const mockResponse = {
+      body: { arrayBuffer: () => toArrayBuffer(payload) },
+      headers: { "content-encoding": "gzip" }
+    };
+    const data = await getResponseData(mockResponse as any, "raw");
 
     assert.deepEqual(data, payload);
   });
@@ -46,9 +55,8 @@ describe("HttpieResponseHandler.getData (mode: 'raw')", () => {
       },
       headers: { "content-type": "application/json" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
     try {
-      await handler.getData();
+      await getResponseData(mockResponse as any);
     }
     catch (error: any) {
       t.assert.equal(error.name, "ResponseFetchError");

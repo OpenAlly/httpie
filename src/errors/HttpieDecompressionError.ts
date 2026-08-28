@@ -4,8 +4,13 @@ import {
   type HttpieHandlerErrorOptions
 } from "./HttpieHandlerError.ts";
 
+type HttpieDecompressionErrorMessage =
+  | "UnexpectedDecompressionError"
+  | "DecompressionNotSupported"
+  | "TooManyContentEncodings";
+
 interface HttpieDecompressionErrorOptions extends HttpieHandlerErrorOptions<
-  "UnexpectedDecompressionError" | "DecompressionNotSupported"
+  HttpieDecompressionErrorMessage
 > {
   buffer: Buffer;
   encodings: string[];
@@ -20,13 +25,25 @@ export class HttpieDecompressionError extends HttpieHandlerError {
     encoding?: string
   ) {
     super(
-      options.message === "DecompressionNotSupported" ?
-        `Unsupported encoding '${encoding}'.` :
-        `An unexpected error occurred when trying to decompress the response body (reason: '${options.error?.message}').`,
+      buildMessage(options, encoding),
       options
     );
 
     this.buffer = options.buffer;
     this.encodings = options.encodings;
+  }
+}
+
+function buildMessage(
+  options: HttpieDecompressionErrorOptions,
+  encoding: string | undefined
+): string {
+  switch (options.message) {
+    case "DecompressionNotSupported":
+      return `Unsupported encoding '${encoding}'.`;
+    case "TooManyContentEncodings":
+      return `Too many content-encodings in the response (received: ${options.encodings.length}).`;
+    default:
+      return `An unexpected error occurred when trying to decompress the response body (reason: '${options.error?.message}').`;
   }
 }

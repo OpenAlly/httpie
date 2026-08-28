@@ -10,7 +10,7 @@ import {
 
 // Import Internal Dependencies
 import { prepareRequest } from "./dispatch.ts";
-import { HttpieResponseHandler } from "./responseHandler.ts";
+import { getResponseData } from "./responseData.ts";
 import {
   HttpieOnHttpError,
   type HttpieDecompressionError,
@@ -54,9 +54,10 @@ export async function request<T>(
     await limit(() => undici.request(url, requestOptions));
 
   const statusCode = requestResponse.statusCode;
-  const responseHandler = new HttpieResponseHandler(requestResponse);
-
-  const data = await responseHandler.getData<T>(options.mode ?? "parse") as T;
+  const data = await getResponseData<T>(
+    requestResponse,
+    options.mode ?? "parse"
+  ) as T;
 
   const RequestResponse = {
     headers: requestResponse.headers,

@@ -3,18 +3,17 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { HttpieResponseHandler } from "../../src/http/responseHandler.ts";
+import { getResponseData } from "../../src/http/responseData.ts";
 import { toArrayBuffer } from "../helpers/buffer.ts";
 
-describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
+describe("getResponseData (mode: 'parse')", () => {
   it("should parse a JSON response with no errors", async() => {
     const payload = { foo: "bar" };
     const mockResponse = {
       body: { arrayBuffer: () => toArrayBuffer(Buffer.from(JSON.stringify(payload))) },
       headers: { "content-type": "application/json" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("parse");
+    const data = await getResponseData(mockResponse as any, "parse");
 
     assert.deepEqual(data, payload);
   });
@@ -30,9 +29,8 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
       body: { arrayBuffer: () => toArrayBuffer(Buffer.from(payload)) },
       headers: { "content-type": "application/json" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
     try {
-      await handler.getData("parse");
+      await getResponseData(mockResponse as any, "parse");
     }
     catch (error: any) {
       t.assert.equal(error.text, payload);
@@ -45,14 +43,12 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
 
   it("should return the original buffer when there is no content-type", async() => {
     const payload = Buffer.from("hello world!");
-    // const data = await HttpieResponseHandler.parseUndiciResponse<Buffer>(payload);
 
     const mockResponse = {
       body: { arrayBuffer: () => toArrayBuffer(payload) },
       headers: {}
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("parse");
+    const data = await getResponseData(mockResponse as any, "parse");
 
     assert.deepEqual(data, payload);
   });
@@ -63,8 +59,7 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
       body: { arrayBuffer: () => toArrayBuffer(Buffer.from(payload)) },
       headers: { "content-type": "text/anything" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("parse");
+    const data = await getResponseData(mockResponse as any, "parse");
 
     assert.deepEqual(data, payload);
   });
@@ -76,8 +71,7 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
       body: { arrayBuffer: () => toArrayBuffer(Buffer.from(JSON.stringify(payload))) },
       headers: { "content-type": "application/json; charset=utf-8" }
     };
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("parse");
+    const data = await getResponseData(mockResponse as any, "parse");
 
     assert.deepEqual(data, payload);
   });
@@ -89,9 +83,30 @@ describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
       headers: { "content-type": "application/pdf" }
     };
 
-    const handler = new HttpieResponseHandler(mockResponse as any);
-    const data = await handler.getData("parse");
+    const data = await getResponseData(mockResponse as any, "parse");
 
     assert.deepEqual(data, buf);
+  });
+});
+
+describe("getResponseData (mode: 'parse') with an invalid 'content-type'", () => {
+  it("must throw a ResponseParsingError with a null text", async(t) => {
+    t.plan(3);
+
+    const buf = Buffer.from("hello world!");
+    const mockResponse = {
+      statusCode: 200,
+      body: { arrayBuffer: () => toArrayBuffer(buf) },
+      headers: { "content-type": "foobar" }
+    };
+
+    try {
+      await getResponseData(mockResponse as any, "parse");
+    }
+    catch (error: any) {
+      t.assert.equal(error.name, "ResponseParsingError");
+      t.assert.equal(error.text, null);
+      t.assert.deepEqual(error.buffer, buf);
+    }
   });
 });

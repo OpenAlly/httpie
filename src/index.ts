@@ -26,10 +26,6 @@ export * from "./types.ts";
 export * from "./http/request.ts";
 export * from "./http/stream.ts";
 export {
-  HttpieResponseHandler,
-  type TypeOfDecompression
-} from "./http/responseHandler.ts";
-export {
   agents,
   computeURI,
   type CustomHttpAgent
