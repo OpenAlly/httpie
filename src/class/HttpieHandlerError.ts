@@ -1,44 +1,44 @@
 /* eslint-disable max-classes-per-file */
 
 // Import Internal Dependencies
-import { HttpieError, type HttpieErrorOptions } from "./HttpieCommonError.js";
 import {
-  getDecompressionError,
-  getFetchError,
-  getParserError
-} from "../common/errors.js";
+  HttpieError,
+  type HttpieErrorOptions
+} from "./HttpieCommonError.js";
 
-type MessageOfGetDecompressionError = Parameters<typeof getDecompressionError>[0]["message"];
-type MessageOfGetParserError = Parameters<typeof getParserError>[0]["message"];
-type MessageOfGetFetchError = Parameters<typeof getFetchError>[0]["message"];
-
-interface HttpieHandlerErrorOptions<T extends string = string> extends HttpieErrorOptions {
-  /** @description original error */
+interface HttpieHandlerErrorOptions<
+  T extends string = string
+> extends HttpieErrorOptions {
   error?: Error;
   message: T;
 }
 
-interface HttpieDecompressionErrorOptions extends HttpieHandlerErrorOptions<MessageOfGetDecompressionError> {
-  /** @description original body as buffer */
+interface HttpieDecompressionErrorOptions extends HttpieHandlerErrorOptions<
+  "UnexpectedDecompressionError" | "DecompressionNotSupported"
+> {
   buffer: Buffer;
-  /** @description encodings from 'content-encoding' header */
   encodings: string[];
 }
 
-interface HttpieParserErrorOptions extends HttpieHandlerErrorOptions<MessageOfGetParserError> {
-  /** @description content-type from 'content-type' header without params */
+interface HttpieParserErrorOptions extends HttpieHandlerErrorOptions<
+  "ResponseParsingError"
+> {
   contentType: string;
-  /** @description original body as buffer */
   buffer: Buffer;
-  /** @description body as string */
   text: string | null;
 }
 
 class HttpieHandlerError extends HttpieError {
   reason: Error | null;
 
-  constructor(message: string, options: HttpieHandlerErrorOptions) {
-    super(message, options);
+  constructor(
+    message: string,
+    options: HttpieHandlerErrorOptions
+  ) {
+    super(
+      message,
+      options
+    );
 
     this.name = options.message;
     this.reason = options.error ?? null;
@@ -46,8 +46,13 @@ class HttpieHandlerError extends HttpieError {
 }
 
 export class HttpieFetchBodyError extends HttpieHandlerError {
-  constructor(options: HttpieHandlerErrorOptions<MessageOfGetFetchError>, ...args) {
-    super(getFetchError(options, ...args), options);
+  constructor(
+    options: HttpieHandlerErrorOptions<"ResponseFetchError">
+  ) {
+    super(
+      `An unexpected error occurred while trying to retrieve the response body (reason: '${options.error?.message}').`,
+      options
+    );
   }
 }
 
@@ -55,8 +60,16 @@ export class HttpieDecompressionError extends HttpieHandlerError {
   buffer: Buffer;
   encodings: string[];
 
-  constructor(options: HttpieDecompressionErrorOptions, ...args) {
-    super(getDecompressionError(options, ...args), options);
+  constructor(
+    options: HttpieDecompressionErrorOptions,
+    encoding?: string
+  ) {
+    super(
+      options.message === "DecompressionNotSupported" ?
+        `Unsupported encoding '${encoding}'.` :
+        `An unexpected error occurred when trying to decompress the response body (reason: '${options.error?.message}').`,
+      options
+    );
 
     this.buffer = options.buffer;
     this.encodings = options.encodings;
@@ -68,8 +81,13 @@ export class HttpieParserError extends HttpieHandlerError {
   buffer: Buffer;
   text: string | null;
 
-  constructor(options: HttpieParserErrorOptions, ...args) {
-    super(getParserError(options, ...args), options);
+  constructor(
+    options: HttpieParserErrorOptions
+  ) {
+    super(
+      `An unexpected error occurred when trying to parse the response body (reason: '${options.error?.message}').`,
+      options
+    );
 
     this.buffer = options.buffer;
     this.contentType = options.contentType;
