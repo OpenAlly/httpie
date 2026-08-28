@@ -16,8 +16,10 @@ const kCharsetConversionTable = {
 
 export const DEFAULT_HEADER = { "user-agent": kDefaultUserAgent };
 
-export function isAsyncIterable(value: any): boolean {
-  return typeof value[Symbol.asyncIterator] === "function";
+export function isAsyncIterable(
+  value: unknown
+): value is AsyncIterable<unknown> {
+  return typeof (value as AsyncIterable<unknown>)?.[Symbol.asyncIterator] === "function";
 }
 
 /**
@@ -99,22 +101,18 @@ export function isHttpieError(
   return error instanceof HttpieError;
 }
 
-export function isHTTPError<T extends RequestResponse<any> = RequestResponse<any>>(
+export function isHTTPError<
+  T extends RequestResponse<any> = RequestResponse<any>
+>(
   error: unknown
 ): error is HttpieOnHttpError<T> {
   return error instanceof HttpieOnHttpError;
 }
 
-export function createBody(body: undefined): undefined;
-export function createBody(body: any, headers?: IncomingHttpHeaders): string | Buffer;
-
-/**
- * @description Generate a proper body for Undici Client. This method was mainly created to automatically manage JSON content.
- */
 export function createBody(
-  body: any,
+  body?: any,
   headers: IncomingHttpHeaders = {}
-): string | Buffer | undefined {
+): string | Buffer | AsyncIterable<unknown> | undefined {
   if (typeof body === "undefined") {
     return void 0;
   }

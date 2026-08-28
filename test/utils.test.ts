@@ -18,6 +18,11 @@ describe("isAsyncIterable", () => {
     assert.strictEqual(Utils.isAsyncIterable("foobar"), false);
   });
 
+  it("should return false for null and undefined", () => {
+    assert.strictEqual(Utils.isAsyncIterable(null), false);
+    assert.strictEqual(Utils.isAsyncIterable(undefined), false);
+  });
+
   it("should return true for a Async Generator Function", () => {
     async function* foo() {
       yield "bar";
@@ -93,6 +98,16 @@ describe("createHeaders", () => {
 describe("createBody", () => {
   it("should return 'undefined' when undefined is provided as body argument", () => {
     assert.strictEqual(Utils.createBody(undefined), undefined);
+  });
+
+  it("should serialize a null body instead of throwing", () => {
+    const headerRef: IncomingHttpHeaders = {};
+
+    const result = Utils.createBody(null, headerRef);
+
+    assert.strictEqual(result, "null");
+    assert.strictEqual(headerRef["content-type"], "application/json");
+    assert.strictEqual(headerRef["content-length"], "4");
   });
 
   it("should be able to prepare and stringify a JSON body", () => {
