@@ -125,6 +125,35 @@ describe("createBody", () => {
     assert.strictEqual(headerRef["content-length"], String(Buffer.byteLength(bodyStr)));
   });
 
+  it("should not overwrite an explicitly provided content-type", () => {
+    const body = { foo: "bar" };
+    const headerRef: IncomingHttpHeaders = { "Content-Type": "application/vnd.api+json" };
+
+    Utils.createBody(body, headerRef);
+
+    assert.deepStrictEqual(Object.keys(headerRef), ["Content-Type", "content-length"]);
+    assert.strictEqual(headerRef["Content-Type"], "application/vnd.api+json");
+  });
+
+  it("should not overwrite an explicitly provided content-type for an URLEncoded body", () => {
+    const body = new URLSearchParams({ foo: "bar" });
+    const headerRef: IncomingHttpHeaders = { "content-type": "application/x-my-form" };
+
+    Utils.createBody(body, headerRef);
+
+    assert.strictEqual(headerRef["content-type"], "application/x-my-form");
+  });
+
+  it("should replace a differently cased content-length instead of duplicating it", () => {
+    const body = { foo: "bar" };
+    const headerRef: IncomingHttpHeaders = { "Content-Length": "999" };
+
+    Utils.createBody(body, headerRef);
+
+    assert.deepStrictEqual(Object.keys(headerRef), ["content-type", "content-length"]);
+    assert.strictEqual(headerRef["content-length"], String(Buffer.byteLength(JSON.stringify(body))));
+  });
+
   it("should be able to prepare a Buffer body", () => {
     const body = Buffer.from("hello world!");
     const headerRef: IncomingHttpHeaders = {};

@@ -55,6 +55,15 @@ function setHeader(
   headers[name] = value;
 }
 
+function hasHeader(
+  headers: IncomingHttpHeaders,
+  name: string
+): boolean {
+  const lowerName = name.toLowerCase();
+
+  return Object.keys(headers).some((key) => key.toLowerCase() === lowerName);
+}
+
 /**
  * @description Create a default plain Object headers that will contains a Set of default values like:
  * - User-agent
@@ -66,11 +75,19 @@ export function createHeaders(
   const headers: IncomingHttpHeaders = { ...DEFAULT_HEADER };
 
   for (const [name, value] of Object.entries(options.headers ?? {})) {
-    setHeader(headers, name, value);
+    setHeader(
+      headers,
+      name,
+      value
+    );
   }
 
   if (options.authorization) {
-    setHeader(headers, "Authorization", createAuthorizationHeader(options.authorization));
+    setHeader(
+      headers,
+      "Authorization",
+      createAuthorizationHeader(options.authorization)
+    );
   }
 
   return headers;
@@ -106,15 +123,28 @@ export function createBody(
   }
 
   let finalBody = body;
+  let contentType: string | null = null;
   if (body instanceof URLSearchParams) {
-    headers["content-type"] = "application/x-www-form-urlencoded";
     finalBody = body.toString();
+    contentType = "application/x-www-form-urlencoded";
   }
   else if (typeof body === "object" && !Buffer.isBuffer(body)) {
-    headers["content-type"] = "application/json";
     finalBody = JSON.stringify(body);
+    contentType = "application/json";
   }
-  headers["content-length"] = String(Buffer.byteLength(finalBody));
+
+  if (contentType !== null && !hasHeader(headers, "content-type")) {
+    setHeader(
+      headers,
+      "content-type",
+      contentType
+    );
+  }
+  setHeader(
+    headers,
+    "content-length",
+    String(Buffer.byteLength(finalBody))
+  );
 
   return finalBody;
 }
