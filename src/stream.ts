@@ -22,16 +22,21 @@ export function pipeline<TOpaque = null>(
   uri: string | URL,
   options: StreamOptions<TOpaque> = {}
 ): Duplex {
-  const computedURI = computeURI(method, uri);
+  const computedURI = computeURI(uri);
   if (typeof options.querystring !== "undefined") {
-    const qs = typeof options.querystring === "string" ? new URLSearchParams(options.querystring) : options.querystring;
+    const qs = typeof options.querystring === "string"
+      ? new URLSearchParams(options.querystring)
+      : options.querystring;
     for (const [key, value] of qs.entries()) {
       computedURI.url.searchParams.set(key, value);
     }
   }
 
   const dispatcher = options.agent ?? computedURI.agent ?? void 0;
-  const headers = Utils.createHeaders({ headers: options.headers, authorization: options.authorization });
+  const headers = Utils.createHeaders({
+    headers: options.headers,
+    authorization: options.authorization
+  });
   const body = Utils.createBody(options.body, headers);
 
   return undici.pipeline(computedURI.url, {
@@ -52,16 +57,24 @@ export function stream<TOpaque = null>(
   uri: string | URL,
   options: StreamOptions<TOpaque> = {}
 ): WritableStreamCallback<TOpaque> {
-  const computedURI = computeURI(method, uri);
+  const computedURI = computeURI(uri);
 
   const dispatcher = options.agent ?? computedURI.agent ?? void 0;
-  const headers = Utils.createHeaders({ headers: options.headers, authorization: options.authorization });
+  const headers = Utils.createHeaders({
+    headers: options.headers,
+    authorization: options.authorization
+  });
   const body = Utils.createBody(options.body, headers);
 
   return (factory) => undici
     .stream<TOpaque>(
       computedURI.url,
-      { method: method as HttpMethod, headers, body, dispatcher },
+      {
+        method: method as HttpMethod,
+        headers,
+        body,
+        dispatcher
+      },
       factory
     );
 }

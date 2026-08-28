@@ -71,44 +71,53 @@ describe("computeURI", () => {
   });
 
   it("should compute a windev URI (as string)", () => {
-    const result = Agents.computeURI("GET", kWindevMonitoringURL);
+    const result = Agents.computeURI(kWindevMonitoringURL);
 
     assert.strictEqual(result.url.href, kWindevMonitoringURL);
     assert.strictEqual(result.agent, windev.agent);
 
-    assert.strictEqual(Agents.URI_CACHE.has("GET" + kWindevMonitoringURL), true);
+    assert.strictEqual(Agents.URI_CACHE.has(kWindevMonitoringURL), true);
   });
 
   it("should compute a windev URI (as WHATWG URL)", () => {
     const localURL = new URL(kWindevMonitoringURL);
-    const result = Agents.computeURI("POST", localURL);
+    const result = Agents.computeURI(localURL);
 
     assert.strictEqual(result.url.href, kWindevMonitoringURL);
     assert.strictEqual(result.agent, windev.agent);
 
-    assert.strictEqual(Agents.URI_CACHE.has("POST" + localURL.toString()), true);
+    assert.strictEqual(Agents.URI_CACHE.has(localURL.toString()), true);
   });
 
   it("should return cached entry", () => {
-    Agents.URI_CACHE.set("GET" + kWindevMonitoringURL, true as any);
-    const result = Agents.computeURI("GET", kWindevMonitoringURL) as unknown as boolean;
+    const cached = Agents.computeURI(kWindevMonitoringURL);
+    const result = Agents.computeURI(kWindevMonitoringURL);
 
-    assert.strictEqual(result, true);
+    assert.strictEqual(result.url.href, cached.url.href);
+    assert.strictEqual(result.agent, cached.agent);
   });
 
-  it("should not return cached entry because method doesn't match", () => {
-    Agents.URI_CACHE.set("POST" + kWindevMonitoringURL, true as any);
-    const result = Agents.computeURI("GET", kWindevMonitoringURL);
+  it("should not leak a mutated querystring into the cached entry", () => {
+    Agents.computeURI(kWindevMonitoringURL).url.searchParams.set("token", "secret");
+
+    const result = Agents.computeURI(kWindevMonitoringURL);
 
     assert.strictEqual(result.url.href, kWindevMonitoringURL);
-    assert.strictEqual(result.agent, windev.agent);
+  });
 
-    assert.strictEqual(Agents.URI_CACHE.has("GET" + kWindevMonitoringURL), true);
+  it("should not leak a mutation of the caller URL into the cached entry", () => {
+    const localURL = new URL(kWindevMonitoringURL);
+    Agents.computeURI(localURL);
+    localURL.searchParams.set("token", "secret");
+
+    const result = Agents.computeURI(kWindevMonitoringURL);
+
+    assert.strictEqual(result.url.href, kWindevMonitoringURL);
   });
 
   it("should compute an URL not related to any local agents", () => {
     const stringURL = "https://www.linkedin.com/feed/";
-    const result = Agents.computeURI("GET", new URL("", stringURL));
+    const result = Agents.computeURI(new URL("", stringURL));
 
     assert.strictEqual(result.url.href, stringURL);
     assert.strictEqual(result.agent, null);

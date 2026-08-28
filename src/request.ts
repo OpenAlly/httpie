@@ -76,9 +76,11 @@ export async function request<T>(
   uri: string | URL,
   options: RequestOptions = {}
 ): Promise<RequestResponse<T>> {
-  const computedURI = computeURI(method, uri);
+  const computedURI = computeURI(uri);
   if (typeof options.querystring !== "undefined") {
-    const qs = typeof options.querystring === "string" ? new URLSearchParams(options.querystring) : options.querystring;
+    const qs = typeof options.querystring === "string"
+      ? new URLSearchParams(options.querystring)
+      : options.querystring;
     for (const [key, value] of qs.entries()) {
       computedURI.url.searchParams.set(key, value);
     }
@@ -87,7 +89,10 @@ export async function request<T>(
   const limit = options.limit ?? computedURI.limit ?? null;
   const dispatcher = options.agent ?? computedURI.agent ?? void 0;
 
-  const headers = Utils.createHeaders({ headers: options.headers, authorization: options.authorization });
+  const headers = Utils.createHeaders({
+    headers: options.headers,
+    authorization: options.authorization
+  });
   const body = Utils.createBody(options.body, headers);
 
   const requestOptions = {

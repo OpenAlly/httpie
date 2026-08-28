@@ -1,18 +1,20 @@
 // Import Third-party Dependencies
-import { Agent, ProxyAgent, MockAgent } from "undici";
+import {
+  Agent,
+  ProxyAgent,
+  MockAgent
+} from "undici";
 import { LRUCache } from "lru-cache";
 
 // Import Internal Dependencies
 import {
-  type InlineCallbackAction,
-  type HttpMethod,
-  type WebDavMethod
+  type InlineCallbackAction
 } from "./request.js";
 
 /**
  * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm
  */
-export const URI_CACHE = new LRUCache<string | URL, ComputedUrlAndAgent>({
+export const URI_CACHE = new LRUCache<string, ComputedUrlAndAgent>({
   max: 100,
   ttl: 1_000 * 60 * 120
 });
@@ -65,7 +67,13 @@ export function computeURIOnAllAgents(uri: string): ComputedUrlAndAgent {
       return { url, agent: agent.agent, limit: agent.limit };
     }
   }
-  const url = new URL(uri);
+
+  return computeURIOnDetectedAgent(new URL(uri));
+}
+
+function computeURIOnDetectedAgent(
+  url: URL
+): ComputedUrlAndAgent {
   const agent = detectAgentFromURI(url);
 
   return {
@@ -94,28 +102,31 @@ export function detectAgentFromURI(uri: URL): CustomHttpAgent | null {
 }
 
 /**
- * @description Compute a given URI (format string or WHATWG URL) and return a fully build URL and paired agent.
- * Under the hood it use a LRU cache
+ * Compute a given URI (format string or WHATWG URL) and return a fully build URL and paired agent.
  */
 export function computeURI(
-  method: HttpMethod | WebDavMethod,
   uri: string | URL
 ): ComputedUrlAndAgent {
-  const uriStr = method.toUpperCase() + uri.toString();
-  if (URI_CACHE.has(uriStr)) {
-    return URI_CACHE.get(uriStr)!;
+  const uriStr = uri.toString();
+
+  const cached = URI_CACHE.get(uriStr);
+  if (cached) {
+    return {
+      ...cached,
+      url: new URL(cached.url)
+    };
   }
 
-  let response: ComputedUrlAndAgent;
-  if (typeof uri === "string") {
-    response = computeURIOnAllAgents(uri);
-  }
-  else {
-    const agent = detectAgentFromURI(uri);
+  const computed = typeof uri === "string" ?
+    computeURIOnAllAgents(uri) :
+    computeURIOnDetectedAgent(uri);
+  URI_CACHE.set(
+    uriStr,
+    {
+      ...computed,
+      url: new URL(computed.url)
+    }
+  );
 
-    response = { url: uri, agent: agent?.agent ?? null, limit: agent?.limit };
-  }
-  URI_CACHE.set(uriStr, response);
-
-  return response;
+  return computed;
 }
