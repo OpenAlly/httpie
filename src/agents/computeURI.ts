@@ -4,19 +4,16 @@ import {
   ProxyAgent,
   MockAgent
 } from "undici";
-import { LRUCache } from "lru-cache";
 
 // Import Internal Dependencies
 import type { InlineCallbackAction } from "../types.ts";
+import { LRUCache } from "../utils/lruCache.ts";
 import {
   agents,
   detectAgentFromURI,
   isAgentPathMatchingURI
 } from "./registry.ts";
 
-/**
- * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm
- */
 export const URI_CACHE = new LRUCache<string, ComputedUrlAndAgent>({
   max: 100,
   ttl: 1_000 * 60 * 120
