@@ -2,7 +2,7 @@
 import { type IncomingHttpHeaders } from "node:http";
 
 // Import Internal Dependencies
-import { type RequestOptions } from "../types.js";
+import { type RequestOptions } from "../types.ts";
 
 // CONSTANTS
 const kDefaultUserAgent = "httpie";

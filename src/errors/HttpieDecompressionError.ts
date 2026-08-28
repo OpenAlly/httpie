@@ -2,7 +2,7 @@
 import {
   HttpieHandlerError,
   type HttpieHandlerErrorOptions
-} from "./HttpieHandlerError.js";
+} from "./HttpieHandlerError.ts";
 
 interface HttpieDecompressionErrorOptions extends HttpieHandlerErrorOptions<
   "UnexpectedDecompressionError" | "DecompressionNotSupported"

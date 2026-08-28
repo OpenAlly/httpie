@@ -6,11 +6,11 @@ import { pipeline } from "node:stream/promises";
 import assert from "node:assert";
 
 // Import Third-party Dependencies
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 
 // Import Internal Dependencies
-import * as httpie from "../../src/index.js";
-import { createServer } from "../helpers/server.js";
+import * as httpie from "../../src/index.ts";
+import { createServer } from "../helpers/server.ts";
 
 // CONSTANTS
 const __dirname = import.meta.dirname;

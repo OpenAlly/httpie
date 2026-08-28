@@ -8,8 +8,8 @@ import { promisify } from "node:util";
 import { type Interceptable } from "undici";
 
 // Import Internal Dependencies
-import { request } from "../../src/index.js";
-import { createMockPool, kMockUrl as kUrl } from "../helpers/mockPool.js";
+import { request } from "../../src/index.ts";
+import { createMockPool, kMockUrl as kUrl } from "../helpers/mockPool.ts";
 
 // CONSTANTS
 const kAsyncGzip = promisify(gzip);

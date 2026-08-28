@@ -7,12 +7,12 @@ import {
 import { LRUCache } from "lru-cache";
 
 // Import Internal Dependencies
-import type { InlineCallbackAction } from "../types.js";
+import type { InlineCallbackAction } from "../types.ts";
 import {
   agents,
   detectAgentFromURI,
   isAgentPathMatchingURI
-} from "./registry.js";
+} from "./registry.ts";
 
 /**
  * @see https://en.wikipedia.org/wiki/Page_replacement_algorithm

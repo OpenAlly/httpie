@@ -2,7 +2,7 @@
 import {
   HttpieHandlerError,
   type HttpieHandlerErrorOptions
-} from "./HttpieHandlerError.js";
+} from "./HttpieHandlerError.ts";
 
 export class HttpieFetchBodyError extends HttpieHandlerError {
   constructor(

@@ -7,8 +7,8 @@ import { randomInt } from "node:crypto";
 import { type Interceptable } from "undici";
 
 // Import Internal Dependencies
-import { isHTTPError, request } from "../../src/index.js";
-import { createMockPool, kMockUrl as kUrl } from "../helpers/mockPool.js";
+import { isHTTPError, request } from "../../src/index.ts";
+import { createMockPool, kMockUrl as kUrl } from "../helpers/mockPool.ts";
 
 // VARS
 let pool: Interceptable;

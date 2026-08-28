@@ -3,8 +3,8 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { agents, detectAgentFromURI, isAgentPathMatchingURI } from "../../src/agents/registry.js";
-import { windev } from "../helpers/index.js";
+import { agents, detectAgentFromURI, isAgentPathMatchingURI } from "../../src/agents/registry.ts";
+import { windev } from "../helpers/index.ts";
 
 // CONSTANTS
 const kWindevMonitoringURL = "https://ws.dev.myunisoft.tech/ws_monitoring";

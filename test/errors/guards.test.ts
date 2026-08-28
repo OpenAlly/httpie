@@ -4,11 +4,11 @@ import assert from "node:assert";
 import vm from "node:vm";
 
 // Import Internal Dependencies
-import { isHTTPError, isHttpieError } from "../../src/errors/guards.js";
-import { HttpieOnHttpError } from "../../src/errors/HttpieOnHttpError.js";
-import { HttpieDecompressionError } from "../../src/errors/HttpieDecompressionError.js";
-import { HttpieFetchBodyError } from "../../src/errors/HttpieFetchBodyError.js";
-import { HttpieParserError } from "../../src/errors/HttpieParserError.js";
+import { isHTTPError, isHttpieError } from "../../src/errors/guards.ts";
+import { HttpieOnHttpError } from "../../src/errors/HttpieOnHttpError.ts";
+import { HttpieDecompressionError } from "../../src/errors/HttpieDecompressionError.ts";
+import { HttpieFetchBodyError } from "../../src/errors/HttpieFetchBodyError.ts";
+import { HttpieParserError } from "../../src/errors/HttpieParserError.ts";
 
 describe("isHttpieError", () => {
   it("it should be true", () => {

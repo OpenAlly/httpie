@@ -3,8 +3,8 @@ import {
   HttpieError,
   kHttpieErrorBrand,
   type HttpieErrorKind
-} from "./HttpieError.js";
-import { type RequestResponse } from "../types.js";
+} from "./HttpieError.ts";
+import { type RequestResponse } from "../types.ts";
 
 /**
  * @description Class to generate an Error with all the required properties from the response.

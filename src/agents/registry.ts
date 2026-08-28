@@ -6,7 +6,7 @@ import {
 } from "undici";
 
 // Import Internal Dependencies
-import type { InlineCallbackAction } from "../types.js";
+import type { InlineCallbackAction } from "../types.ts";
 
 /**
  * These are agents specifically designed to work with MyUnisoft.

@@ -8,7 +8,7 @@ import fastify from "fastify";
 import * as undici from "undici";
 
 // Import Internal Dependencies
-import { CustomHttpAgent, agents } from "../../src/agents/index.js";
+import { type CustomHttpAgent, agents } from "../../src/agents/index.ts";
 
 // CONSTANTS
 const __dirname = import.meta.dirname;

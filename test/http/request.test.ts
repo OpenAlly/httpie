@@ -3,17 +3,17 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 
 // Import Third-party Dependencies
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import isHtml from "is-html";
 
 // Import Internal Dependencies
 import {
   get, post, put, patch, del, safeGet,
   Agent, interceptors
-} from "../../src/index.js";
-import { isHTTPError } from "../../src/errors/guards.js";
-import { createServer } from "../helpers/server.js";
-import { windev } from "../helpers/index.js";
+} from "../../src/index.ts";
+import { isHTTPError } from "../../src/errors/guards.ts";
+import { createServer } from "../helpers/server.ts";
+import { windev } from "../helpers/index.ts";
 
 let httpServer: FastifyInstance;
 before(async() => {

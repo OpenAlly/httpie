@@ -2,9 +2,9 @@
 import {
   type HttpieError,
   kHttpieErrorBrand
-} from "./HttpieError.js";
-import { type HttpieOnHttpError } from "./HttpieOnHttpError.js";
-import { type RequestResponse } from "../types.js";
+} from "./HttpieError.ts";
+import { type HttpieOnHttpError } from "./HttpieOnHttpError.ts";
+import { type RequestResponse } from "../types.ts";
 
 export function isHttpieError(
   error: unknown

@@ -5,7 +5,7 @@ import { describe, it } from "node:test";
 import { MockAgent, setGlobalDispatcher } from "undici";
 
 // Import Internal Dependencies
-import { request } from "../../src/http/request.js";
+import { request } from "../../src/http/request.ts";
 
 describe("HttpieOnHttpError", () => {
   it("it should create an HttpieOnHttpError with the properties of RequestResponse", async(t) => {

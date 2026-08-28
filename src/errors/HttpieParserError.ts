@@ -2,7 +2,7 @@
 import {
   HttpieHandlerError,
   type HttpieHandlerErrorOptions
-} from "./HttpieHandlerError.js";
+} from "./HttpieHandlerError.ts";
 
 interface HttpieParserErrorOptions extends HttpieHandlerErrorOptions<
   "ResponseParsingError"

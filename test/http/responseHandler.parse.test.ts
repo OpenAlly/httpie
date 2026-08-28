@@ -3,8 +3,8 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { HttpieResponseHandler } from "../../src/http/responseHandler.js";
-import { toArrayBuffer } from "../helpers/buffer.js";
+import { HttpieResponseHandler } from "../../src/http/responseHandler.ts";
+import { toArrayBuffer } from "../helpers/buffer.ts";
 
 describe("HttpieResponseHandler.getData (mode: 'parse')", () => {
   it("should parse a JSON response with no errors", async() => {

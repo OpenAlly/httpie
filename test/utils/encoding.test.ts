@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { getEncodingCharset } from "../../src/utils/encoding.js";
+import { getEncodingCharset } from "../../src/utils/encoding.ts";
 
 describe("getEncodingCharset", () => {
   it("should return 'utf-8' if no value is provided", () => {

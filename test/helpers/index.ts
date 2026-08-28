@@ -2,7 +2,7 @@
 import * as undici from "undici";
 
 // Import Internal Dependencies
-import { CustomHttpAgent, agents } from "../../src/agents/index.js";
+import { type CustomHttpAgent, agents } from "../../src/agents/index.ts";
 
 const windev: CustomHttpAgent = {
   customPath: "windev",

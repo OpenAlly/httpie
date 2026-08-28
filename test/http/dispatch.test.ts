@@ -4,8 +4,8 @@ import assert from "node:assert";
 import { URLSearchParams } from "node:url";
 
 // Import Internal Dependencies
-import { prepareRequest } from "../../src/http/dispatch.js";
-import { URI_CACHE } from "../../src/agents/index.js";
+import { prepareRequest } from "../../src/http/dispatch.ts";
+import { URI_CACHE } from "../../src/agents/index.ts";
 
 // CONSTANTS
 const kDummyURL = "https://www.linkedin.com/feed/";

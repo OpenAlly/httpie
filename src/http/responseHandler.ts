@@ -11,13 +11,13 @@ import {
 } from "undici";
 
 // Import Internal Dependencies
-import { getEncodingCharset } from "../utils/encoding.js";
+import { getEncodingCharset } from "../utils/encoding.ts";
 import {
   HttpieDecompressionError,
   HttpieFetchBodyError,
   HttpieParserError
-} from "../errors/index.js";
-import { type ModeOfHttpieResponseHandler } from "../types.js";
+} from "../errors/index.ts";
+import { type ModeOfHttpieResponseHandler } from "../types.ts";
 
 const kAsyncGunzip = promisify(gunzip);
 const kDecompress = {

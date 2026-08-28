@@ -6,15 +6,15 @@ import { URLSearchParams } from "node:url";
 import * as undici from "undici";
 
 // Import Internal Dependencies
-import { createHeaders } from "../utils/headers.js";
-import { createBody } from "../utils/body.js";
-import { computeURI } from "../agents/computeURI.js";
+import { createHeaders } from "../utils/headers.ts";
+import { createBody } from "../utils/body.ts";
+import { computeURI } from "../agents/computeURI.ts";
 import {
   type RequestOptions,
   type InlineCallbackAction,
   type HttpMethod,
   type WebDavMethod
-} from "../types.js";
+} from "../types.ts";
 
 export interface DispatchOptions {
   method: HttpMethod;

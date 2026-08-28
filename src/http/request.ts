@@ -9,20 +9,20 @@ import {
 } from "@openally/result";
 
 // Import Internal Dependencies
-import { prepareRequest } from "./dispatch.js";
-import { HttpieResponseHandler } from "./responseHandler.js";
+import { prepareRequest } from "./dispatch.ts";
+import { HttpieResponseHandler } from "./responseHandler.ts";
 import {
   HttpieOnHttpError,
   type HttpieDecompressionError,
   type HttpieFetchBodyError,
   type HttpieParserError
-} from "../errors/index.js";
+} from "../errors/index.ts";
 import {
   type HttpMethod,
   type RequestOptions,
   type RequestResponse,
   type WebDavMethod
-} from "../types.js";
+} from "../types.ts";
 
 export type RequestError<T> =
   HttpieOnHttpError<RequestResponse<T>> |

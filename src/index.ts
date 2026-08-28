@@ -22,24 +22,24 @@ setGlobalDispatcher(
   new Agent().compose(interceptors.redirect())
 );
 
-export * from "./types.js";
-export * from "./http/request.js";
-export * from "./http/stream.js";
+export * from "./types.ts";
+export * from "./http/request.ts";
+export * from "./http/stream.ts";
 export {
   HttpieResponseHandler,
   type TypeOfDecompression
-} from "./http/responseHandler.js";
+} from "./http/responseHandler.ts";
 export {
   agents,
   computeURI,
   type CustomHttpAgent
-} from "./agents/index.js";
-export { DEFAULT_HEADER } from "./utils/headers.js";
+} from "./agents/index.ts";
+export { DEFAULT_HEADER } from "./utils/headers.ts";
 export {
   HttpieOnHttpError,
   isHTTPError,
   isHttpieError
-} from "./errors/index.js";
+} from "./errors/index.ts";
 
 export {
   Agent,

@@ -1,2 +1,2 @@
-export * from "./registry.js";
-export * from "./computeURI.js";
+export * from "./registry.ts";
+export * from "./computeURI.ts";

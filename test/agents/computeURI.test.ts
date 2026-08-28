@@ -3,8 +3,8 @@ import { beforeEach, describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { computeURI, computeURIOnAllAgents, URI_CACHE } from "../../src/agents/computeURI.js";
-import { windev } from "../helpers/index.js";
+import { computeURI, computeURIOnAllAgents, URI_CACHE } from "../../src/agents/computeURI.ts";
+import { windev } from "../helpers/index.ts";
 
 // CONSTANTS
 const kWindevMonitoringURL = "https://ws.dev.myunisoft.tech/ws_monitoring";

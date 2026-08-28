@@ -2,7 +2,7 @@
 import { type IncomingHttpHeaders } from "node:http";
 
 // Import Internal Dependencies
-import { hasHeader, setHeader } from "./headers.js";
+import { hasHeader, setHeader } from "./headers.ts";
 
 export function isAsyncIterable(
   value: unknown

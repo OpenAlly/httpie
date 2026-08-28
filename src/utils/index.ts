@@ -1,3 +1,3 @@
-export * from "./headers.js";
-export * from "./body.js";
-export * from "./encoding.js";
+export * from "./headers.ts";
+export * from "./body.ts";
+export * from "./encoding.ts";

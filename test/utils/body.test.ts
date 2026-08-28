@@ -1,11 +1,11 @@
 // Import Node.js Dependencies
 import { describe, it } from "node:test";
-import { IncomingHttpHeaders } from "node:http2";
+import type { IncomingHttpHeaders } from "node:http2";
 import assert from "node:assert";
 import stream from "node:stream";
 
 // Import Internal Dependencies
-import { createBody, isAsyncIterable } from "../../src/utils/body.js";
+import { createBody, isAsyncIterable } from "../../src/utils/body.ts";
 
 describe("isAsyncIterable", () => {
   it("should return false for synchronous iterable like an Array", () => {

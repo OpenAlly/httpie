@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 // Import Internal Dependencies
-import { createAuthorizationHeader, createHeaders } from "../../src/utils/headers.js";
+import { createAuthorizationHeader, createHeaders } from "../../src/utils/headers.ts";
 
 describe("createHeaders", () => {
   it("should return a plain object with 'user-agent' equal to 'httpie'", () => {

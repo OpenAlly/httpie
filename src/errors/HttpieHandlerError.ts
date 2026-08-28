@@ -4,7 +4,7 @@ import {
   kHttpieErrorBrand,
   type HttpieErrorKind,
   type HttpieErrorOptions
-} from "./HttpieError.js";
+} from "./HttpieError.ts";
 
 export interface HttpieHandlerErrorOptions<
   T extends string = string

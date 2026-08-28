@@ -5,8 +5,8 @@ import { randomBytes } from "node:crypto";
 import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
 
 // Import Internal Dependencies
-import { HttpieResponseHandler } from "../../src/http/responseHandler.js";
-import { toArrayBuffer } from "../helpers/buffer.js";
+import { HttpieResponseHandler } from "../../src/http/responseHandler.ts";
+import { toArrayBuffer } from "../helpers/buffer.ts";
 
 describe("HttpieResponseHandler.getData (mode: 'decompress')", () => {
   it("must returns the original buffer when there is no 'content-encoding'", async() => {

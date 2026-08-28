@@ -9,8 +9,8 @@ import {
   type RequestOptions,
   type HttpMethod,
   type WebDavMethod
-} from "../types.js";
-import { prepareRequest } from "./dispatch.js";
+} from "../types.ts";
+import { prepareRequest } from "./dispatch.ts";
 
 export type StreamOptions<TOpaque = null> = Omit<RequestOptions, "limit"> & {
   opaque?: TOpaque;
