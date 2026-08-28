@@ -3,6 +3,8 @@
 // Import Internal Dependencies
 import {
   HttpieError,
+  kHttpieErrorBrand,
+  type HttpieErrorKind,
   type HttpieErrorOptions
 } from "./HttpieCommonError.js";
 
@@ -30,6 +32,10 @@ interface HttpieParserErrorOptions extends HttpieHandlerErrorOptions<
 
 class HttpieHandlerError extends HttpieError {
   reason: Error | null;
+
+  override get [kHttpieErrorBrand](): HttpieErrorKind {
+    return "HttpieHandlerError";
+  }
 
   constructor(
     message: string,

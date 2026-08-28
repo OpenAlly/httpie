@@ -4,8 +4,11 @@ import { type IncomingHttpHeaders } from "node:http";
 
 // Import Internal Dependencies
 import { type RequestOptions, type RequestResponse } from "./request.js";
-import { HttpieError } from "./class/HttpieCommonError.js";
-import { HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
+import {
+  type HttpieError,
+  kHttpieErrorBrand
+} from "./class/HttpieCommonError.js";
+import { type HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
 
 // CONSTANTS
 const kDefaultUserAgent = "httpie";
@@ -98,7 +101,7 @@ export function createHeaders(
 export function isHttpieError(
   error: unknown
 ): error is HttpieError {
-  return error instanceof HttpieError;
+  return typeof (error as HttpieError)?.[kHttpieErrorBrand] === "string";
 }
 
 export function isHTTPError<
@@ -106,7 +109,7 @@ export function isHTTPError<
 >(
   error: unknown
 ): error is HttpieOnHttpError<T> {
-  return error instanceof HttpieOnHttpError;
+  return (error as HttpieError)?.[kHttpieErrorBrand] === "HttpieOnHttpError";
 }
 
 export function createBody(

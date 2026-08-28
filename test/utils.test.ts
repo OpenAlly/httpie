@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { IncomingHttpHeaders } from "node:http2";
 import assert from "node:assert";
 import stream from "node:stream";
+import vm from "node:vm";
 
 // Import Internal Dependencies
 import * as Utils from "../src/utils";
@@ -250,5 +251,26 @@ describe("isHTTPError", () => {
       Utils.isHTTPError(new HttpieParserError({ message: "ResponseParsingError", response: {} } as any)),
       false
     );
+  });
+});
+
+describe("cross-realm error branding", () => {
+  const foreignError = vm.runInNewContext(`
+    class ForeignHttpieError extends Error {
+      get [Symbol.for("@openally/httpie.error")]() {
+        return "HttpieOnHttpError";
+      }
+    }
+
+    new ForeignHttpieError("cross-realm");
+  `);
+
+  it("it should not be recognized by instanceof", () => {
+    assert.strictEqual(foreignError instanceof HttpieOnHttpError, false);
+  });
+
+  it("it should still be recognized by the type guards", () => {
+    assert.strictEqual(Utils.isHttpieError(foreignError), true);
+    assert.strictEqual(Utils.isHTTPError(foreignError), true);
   });
 });
