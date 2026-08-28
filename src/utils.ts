@@ -10,7 +10,7 @@ import { HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
 // CONSTANTS
 const kDefaultUserAgent = "httpie";
 const kDefaultEncodingCharset = "utf-8";
-const kCharsetConversionTable = {
+const kCharsetConversionTable: Record<string, BufferEncoding> = {
   "ISO-8859-1": "latin1"
 };
 
@@ -30,10 +30,10 @@ export function getEncodingCharset(
   charset = kDefaultEncodingCharset
 ): BufferEncoding {
   if (Buffer.isEncoding(charset)) {
-    return charset as BufferEncoding;
+    return charset;
   }
 
-  return charset in kCharsetConversionTable ? kCharsetConversionTable[charset] : "utf-8";
+  return kCharsetConversionTable[charset] ?? kDefaultEncodingCharset;
 }
 
 /**
