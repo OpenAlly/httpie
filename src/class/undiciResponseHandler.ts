@@ -38,6 +38,7 @@ export class HttpieResponseHandler {
 
   getData(mode: "decompress" | "raw"): Promise<Buffer>;
   getData<T>(mode?: "parse"): Promise<T>;
+  getData<T>(mode: ModeOfHttpieResponseHandler): Promise<T | Buffer>;
   getData<T>(mode: ModeOfHttpieResponseHandler = "parse") {
     if (mode === "parse") {
       return this.parseUndiciResponse<T>();

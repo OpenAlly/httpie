@@ -1,5 +1,5 @@
 // Import Node.js Dependencies
-import type { IncomingHttpHeaders } from "node:http";
+import { STATUS_CODES, type IncomingHttpHeaders } from "node:http";
 import { URLSearchParams } from "node:url";
 
 // Import Third-party Dependencies
@@ -10,7 +10,6 @@ import {
 } from "@openally/result";
 
 // Import Internal Dependencies
-import { statuses } from "./codes.js";
 import { prepareRequest } from "./dispatch.js";
 import {
   HttpieResponseHandler,
@@ -107,17 +106,11 @@ export async function request<T>(
   const statusCode = requestResponse.statusCode;
   const responseHandler = new HttpieResponseHandler(requestResponse);
 
-  let data: any;
-  if (options.mode === "parse" || !options.mode) {
-    data = await responseHandler.getData<T>("parse");
-  }
-  else {
-    data = await responseHandler.getData(options.mode);
-  }
+  const data = await responseHandler.getData<T>(options.mode ?? "parse") as T;
 
   const RequestResponse = {
     headers: requestResponse.headers,
-    statusMessage: statuses[requestResponse.statusCode]!,
+    statusMessage: STATUS_CODES[requestResponse.statusCode] ?? "Unknown Status",
     statusCode,
     data
   };
