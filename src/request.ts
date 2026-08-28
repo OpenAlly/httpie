@@ -1,15 +1,17 @@
 // Import Node.js Dependencies
-import { type IncomingHttpHeaders } from "node:http";
+import type { IncomingHttpHeaders } from "node:http";
 import { URLSearchParams } from "node:url";
 
 // Import Third-party Dependencies
 import * as undici from "undici";
-import { type Result, wrapAsync } from "@openally/result";
+import {
+  type Result,
+  wrapAsync
+} from "@openally/result";
 
 // Import Internal Dependencies
-import * as Utils from "./utils.js";
 import { statuses } from "./codes.js";
-import { computeURI } from "./agents.js";
+import { prepareRequest } from "./dispatch.js";
 import {
   HttpieResponseHandler,
   type ModeOfHttpieResponseHandler
@@ -23,8 +25,24 @@ import {
   HttpieParserError
 } from "./class/HttpieHandlerError.js";
 
-export type WebDavMethod = "MKCOL" | "COPY" | "MOVE" | "LOCK" | "UNLOCK" | "PROPFIND" | "PROPPATCH";
-export type HttpMethod = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
+export type WebDavMethod =
+  | "MKCOL"
+  | "COPY"
+  | "MOVE"
+  | "LOCK"
+  | "UNLOCK"
+  | "PROPFIND"
+  | "PROPPATCH";
+export type HttpMethod =
+  | "GET"
+  | "HEAD"
+  | "POST"
+  | "PUT"
+  | "DELETE"
+  | "CONNECT"
+  | "OPTIONS"
+  | "TRACE"
+  | "PATCH";
 export type InlineCallbackAction = <T>(fn: () => Promise<T>) => Promise<T>;
 
 export type RequestError<T> =
@@ -48,7 +66,7 @@ export interface RequestOptions {
   blocking?: boolean;
   // Could be dynamically computed depending on the provided URI.
   agent?: undici.Agent | undici.ProxyAgent | undici.MockAgent;
-  /** @description API limiter from a package like `p-ratelimit`. */
+  /** API limiter from a package like `p-ratelimit`. */
   limit?: InlineCallbackAction;
   /** @default "parse" */
   mode?: ModeOfHttpieResponseHandler;
@@ -76,35 +94,15 @@ export async function request<T>(
   uri: string | URL,
   options: RequestOptions = {}
 ): Promise<RequestResponse<T>> {
-  const computedURI = computeURI(uri);
-  if (typeof options.querystring !== "undefined") {
-    const qs = typeof options.querystring === "string"
-      ? new URLSearchParams(options.querystring)
-      : options.querystring;
-    for (const [key, value] of qs.entries()) {
-      computedURI.url.searchParams.set(key, value);
-    }
-  }
+  const {
+    url,
+    limit,
+    options: requestOptions
+  } = prepareRequest(method, uri, options);
 
-  const limit = options.limit ?? computedURI.limit ?? null;
-  const dispatcher = options.agent ?? computedURI.agent ?? void 0;
-
-  const headers = Utils.createHeaders({
-    headers: options.headers,
-    authorization: options.authorization
-  });
-  const body = Utils.createBody(options.body, headers);
-
-  const requestOptions = {
-    method: method as HttpMethod,
-    headers,
-    body,
-    dispatcher,
-    blocking: options.blocking
-  };
   const requestResponse = limit === null ?
-    await undici.request(computedURI.url, requestOptions) :
-    await limit(() => undici.request(computedURI.url, requestOptions));
+    await undici.request(url, requestOptions) :
+    await limit(() => undici.request(url, requestOptions));
 
   const statusCode = requestResponse.statusCode;
   const responseHandler = new HttpieResponseHandler(requestResponse);
