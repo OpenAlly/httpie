@@ -22,12 +22,20 @@ setGlobalDispatcher(
   new Agent().compose(interceptors.redirect())
 );
 
-export * from "./request.js";
-export * from "./stream.js";
-export { agents, computeURI, type CustomHttpAgent } from "./agents.js";
-export { DEFAULT_HEADER, isHTTPError, isHttpieError } from "./utils.js";
-export { HttpieOnHttpError } from "./class/HttpieOnHttpError.js";
-export * from "./class/undiciResponseHandler.js";
+export * from "./types.ts";
+export * from "./http/request.ts";
+export * from "./http/stream.ts";
+export {
+  agents,
+  computeURI,
+  type CustomHttpAgent
+} from "./agents/index.ts";
+export { DEFAULT_HEADER } from "./utils/headers.ts";
+export {
+  HttpieOnHttpError,
+  isHTTPError,
+  isHttpieError
+} from "./errors/index.ts";
 
 export {
   Agent,
