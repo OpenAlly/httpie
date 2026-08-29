@@ -27,53 +27,54 @@
 
 ## 📢 About
 
-The package is inspired by lukeed [httpie](https://github.com/lukeed/httpie) (The use is relatively similar). This package use new Node.js http client [undici](https://github.com/nodejs/undici) under the hood.
+Httpie is a Node.js HTTP client built on [Undici](https://github.com/nodejs/undici). Its request API follows the small, function-based style of lukeed's [httpie](https://github.com/lukeed/httpie), with response parsing, agent selection, rate limiting, and `Result`-based error handling added around it.
 
 ## 🔬 Features
 
-- Automatically parse based on the `content-type`.
-- Automatically decompress based on the `content-encoding`.
-- Includes aliases for common HTTP verbs: `get`, `post`, `put`, `patch`, and `del`.
-- Able to automatically detect domains and paths to assign the right Agent (use a LRU cache to avoid repetitive computation).
-- Allows to use an accurate rate-limiter like `p-ratelimit` with the `limit` option.
-- Safe error handling with Rust-like [Result](https://github.com/OpenAlly/npm-packages/tree/main/src/result).
-
-Thanks to undici:
-
-- Support [redirections](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections) or retry using interceptors.
-- Implement high-level API for undici **stream** and **pipeline** method.
-- High performance (see [benchmarks](https://undici.nodejs.org/#/?id=benchmarks)).
-- Work well with **newest** Node.js API [AbortController](https://nodejs.org/dist/latest-v16.x/docs/api/globals.html#globals_class_abortcontroller) to cancel http request.
-
-Light with seriously maintained dependencies:
-
-![](./docs/images/nodesecure.PNG)
+- Parses JSON and text responses from their `content-type`; other response bodies remain buffers.
+- Decompresses encoded responses before parsing them.
+- Provides `get`, `post`, `put`, `patch`, and `del` aliases alongside the general `request` function.
+- Provides `safeRequest` and safe HTTP verb aliases that return a [Result](https://github.com/OpenAlly/npm-packages/tree/main/src/result).
+- Selects an Undici dispatcher from a registered origin or path, with cached URI resolution.
+- Accepts a rate-limiter callback through the `limit` option or an agent registration.
 
 ## 🚧 Requirements
+
 - [Node.js](https://nodejs.org/en/) version 22 or higher
 
 ## 🚀 Getting Started
 
-This package is available in the Node Package Repository and can be easily installed with [npm](https://docs.npmjs.com/getting-started/what-is-npm) or [yarn](https://yarnpkg.com).
+Install the package with [npm](https://docs.npmjs.com/getting-started/what-is-npm) or [yarn](https://yarnpkg.com):
 
 ```bash
-$ npm i @openally/httpie
+npm install @openally/httpie
 # or
-$ yarn add @openally/httpie
+yarn add @openally/httpie
 ```
 
 ## 📚 Usage example
 
-This client is very similar to lukeed httpie http client.
+```ts
+import {
+  get,
+  post,
+  isHTTPError
+} from "@openally/httpie";
 
-```js
-import * as httpie from "@openally/httpie";
+interface Post {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+}
 
 try {
-  const { data } = await httpie.get("https://jsonplaceholder.typicode.com/posts");
-  console.log(data);
-  
-  const response = await httpie.post("https://jsonplaceholder.typicode.com/posts", {
+  const { data: posts } = await get<Post[]>(
+    "https://jsonplaceholder.typicode.com/posts"
+  );
+  console.log(posts);
+
+  const response = await post<Post>("https://jsonplaceholder.typicode.com/posts", {
     body: {
       title: "foo",
       body: "bar",
@@ -81,33 +82,35 @@ try {
     }
   });
 
-  console.log(response.statusCode);
-  console.log(response.statusMessage);
-  console.log(response.data);
+  console.log(response.statusCode, response.data);
 }
-catch (error) {
-  console.log(error.message);
-  console.log(error.statusCode);
-  console.log(error.headers);
-  console.log(error.data);
+catch (error: unknown) {
+  if (isHTTPError(error)) {
+    console.error(error.statusCode, error.data);
+  }
+  else {
+    throw error;
+  }
 }
 ```
 
-You can also use the `safe` prefix API to get a `Promise<Result<T, E>>`
+The `safe` methods return a `Result` instead of throwing:
 
 ```ts
-import * as httpie from "@openally/httpie";
+import { safePost } from "@openally/httpie";
 
-const response = (await httpie.safePost("https://jsonplaceholder.typicode.com/posts", {
+const result = await safePost("https://jsonplaceholder.typicode.com/posts", {
   body: {
     title: "foo",
     body: "bar",
     userId: 1
   }
-}))
-  .map((response) => response.data)
-  .mapErr((error) => new Error("a message here!", { cause: error.data }));
-  .unwrap();
+});
+
+result.match(
+  (response) => console.log(response.data),
+  (error) => console.error(error.message)
+);
 ```
 
 > [!TIP]
@@ -115,12 +118,15 @@ const response = (await httpie.safePost("https://jsonplaceholder.typicode.com/po
 
 ## 📜 API
 
-- [Request API](./docs/request.md)
-- [Work and manage Agents](./docs/agents.md)
+- [Requests, options, response modes, and safe methods](./docs/request.md)
+- [Streams and pipelines](./docs/stream.md)
+- [Agent registry and URI resolution](./docs/agents.md)
+
+Httpie also re-exports selected Undici APIs. Their behavior follows the [Undici documentation](https://undici.nodejs.org).
 
 ## Error handling
 
-Read the [error documentation](./docs/errors.md).
+Read [Error handling](./docs/errors.md) for thrown errors, safe results, and the `isHttpieError` and `isHTTPError` guards.
 
 ## Contributors ✨
 
